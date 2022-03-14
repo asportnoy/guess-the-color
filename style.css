@@ -36,7 +36,7 @@ body,
 
 .option[disabled] {
 	cursor: not-allowed;
-	transform: scale(0.75);
+	transform: scale(0.9);
 }
 
 .option:not([disabled]):hover {
