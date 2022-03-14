@@ -135,6 +135,7 @@ function chooseColors(min = getMin(), max = getMax()) {
 	// Set colors
 	for (let [i, option] of options.entries()) {
 		option.style.backgroundColor = rgbToHex(colors[i]);
+		option.style.color = '';
 		option.textContent = '';
 	}
 }
@@ -148,6 +149,8 @@ function onClick(index, element) {
 		chooseColors();
 	} else {
 		alert(`Nope! That\'s ${rgbToHex(colors[index])}`);
+		let {L} = rgbToLab(colors[index]);
+		element.style.color = L > 50 ? 'black' : 'white';
 		element.textContent = rgbToHex(colors[index]);
 		element.setAttribute('disabled', true);
 		colors[index] = null;
