@@ -35,20 +35,32 @@ function checkReset() {
 }
 
 btnEasy.addEventListener('click', () => {
-	checkReset();
+	if (difficulty === 'easy') return;
+	if (!checkReset()) return;
 	difficulty = 'easy';
+	btnEasy.classList.add('active');
+	btnMedium.classList.remove('active');
+	btnHard.classList.remove('active');
 	chooseColors();
 });
 
 btnMedium.addEventListener('click', () => {
-	checkReset();
+	if (difficulty === 'medium') return;
+	if (!checkReset()) return;
 	difficulty = 'medium';
+	btnEasy.classList.remove('active');
+	btnMedium.classList.add('active');
+	btnHard.classList.remove('active');
 	chooseColors();
 });
 
 btnHard.addEventListener('click', () => {
-	checkReset();
+	if (difficulty === 'hard') return;
+	if (!checkReset()) return;
 	difficulty = 'hard';
+	btnEasy.classList.remove('active');
+	btnMedium.classList.remove('active');
+	btnHard.classList.add('active');
 	chooseColors();
 });
 
