@@ -185,7 +185,7 @@ function onClick(index, element) {
 		lives--;
 		heartHTML(lives);
 		if (lives <= 0) {
-			alert(`Game Over! Score: ${store.toLocaleString()}`);
+			alert(`Game Over! Score: ${score.toLocaleString()}`);
 			lives = MAX_HEARTS;
 			score = 0;
 			chooseColors();
