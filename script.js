@@ -30,6 +30,10 @@ const DIFFICULTIES = {
 
 let difficulty = 'medium';
 
+/**
+ * Confirm resetting game if in progress
+ * @returns {boolean} Whether to reset
+ */
 function checkReset() {
 	if (score !== 0 || lives !== MAX_HEARTS) {
 		if (!confirm('Are you sure you want to reset?')) return false;
@@ -38,6 +42,8 @@ function checkReset() {
 	}
 	return true;
 }
+
+// Mode handlers
 
 btnEasy.addEventListener('click', () => {
 	if (difficulty === 'easy') return;
@@ -69,10 +75,18 @@ btnHard.addEventListener('click', () => {
 	chooseColors();
 });
 
+/**
+ * Get minimum difference for selected difficulty
+ * @returns {number} Minimum difference
+ */
 function getMin() {
 	return DIFFICULTIES[difficulty].min;
 }
 
+/**
+ * Get maximum difference for selected difficulty
+ * @returns {number} Maximum difference
+ */
 function getMax() {
 	return DIFFICULTIES[difficulty].max;
 }
@@ -141,7 +155,7 @@ let colors;
 let lives = MAX_HEARTS;
 let score = 0;
 /**
- * Choose colors for game
+ * Choose colors for round
  * @param {[number]} min minimum difference
  * @param {[number]} max maximum difference
  * @returns {[number, number, number][]} RGB colors
@@ -156,6 +170,7 @@ function chooseColors(min = getMin(), max = getMax()) {
 		let color = chooseRandomRgb();
 		let answerDiff = getDiff(color, answer);
 		let allDiffs = colors.map(c => getDiff(color, c));
+		// Check that color is not too similar to answer or other colors
 		if (
 			answerDiff > min &&
 			answerDiff < max &&
@@ -167,7 +182,7 @@ function chooseColors(min = getMin(), max = getMax()) {
 	// Randomize array
 	colors = colors.sort(() => Math.random() - 0.5);
 
-	// Set colors
+	// Set element colors
 	for (let [i, option] of options.entries()) {
 		option.style.backgroundColor = rgbToHex(colors[i]);
 		option.style.color = '';
@@ -175,32 +190,47 @@ function chooseColors(min = getMin(), max = getMax()) {
 		option.removeAttribute('disabled');
 	}
 
+	// Update HTML
 	heartHTML(lives);
 	scoreEl.textContent = `Score: ${score.toLocaleString()}`;
 }
-
+// Init
 chooseColors();
 
 let stopShakeTimeout;
+/**
+ * Handle clicks from guess elements
+ * @param {number} index The index of the button
+ * @param {HTMLElement} element The button that was clicked
+ */
 function onClick(index, element) {
-	if (colors[index] == null) return;
+	if (colors[index] == null) return; // Button was disabled
 	if (answer === colors[index]) {
+		// Correct
 		score++;
 		chooseColors();
 	} else {
+		//Incorrect
+		// Set styles on button
 		let {L} = rgbToLab(colors[index]);
 		element.style.color = L > 50 ? 'black' : 'white';
 		element.textContent = rgbToHex(colors[index]);
+		// Disable button
 		element.setAttribute('disabled', true);
 		colors[index] = null;
+		// Reduce lives
 		lives--;
 		heartHTML(lives);
+
 		if (lives <= 0) {
+			// Game over
 			alert(`Game Over! Score: ${score.toLocaleString()}`);
+			// Reset
 			lives = MAX_HEARTS;
 			score = 0;
 			chooseColors();
 		} else {
+			// Shake hearts
 			clearTimeout(stopShakeTimeout);
 			livesEl.classList.remove('shake');
 			livesEl.classList.add('shake');
@@ -210,13 +240,17 @@ function onClick(index, element) {
 			);
 		}
 	}
-	document.body.focus();
 }
 
+// Add event listeners
 for (let [i, option] of options.entries()) {
 	option.addEventListener('click', () => onClick(i, option));
 }
 
+/**
+ * Update heart display
+ * @param {number} [count] Number of hearts left
+ */
 function heartHTML(count = MAX_HEARTS) {
 	let html = '';
 	for (let i = 0; i < MAX_HEARTS; i++) {
