@@ -7,7 +7,7 @@ const livesEl = document.getElementById('lives');
 const scoreEl = document.getElementById('score');
 
 const MAX_HEARTS = 7;
-const NUM_OPTIONS = 5;
+const NUM_OPTIONS = 6;
 const option_html = '<div class="option" role="button"></div>';
 
 optionsParent.innerHTML = option_html.repeat(NUM_OPTIONS);
