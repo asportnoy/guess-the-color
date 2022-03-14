@@ -3,6 +3,9 @@ const options = document.querySelectorAll('.option');
 const btnEasy = document.getElementById('difficulty-easy');
 const btnMedium = document.getElementById('difficulty-medium');
 const btnHard = document.getElementById('difficulty-hard');
+const livesEl = document.getElementById('lives');
+
+const MAX_HEARTS = 5;
 
 const DIFFICULTIES = {
 	easy: {
@@ -105,6 +108,7 @@ function getDiff(color1, color2) {
 
 let answer;
 let colors;
+let lives = MAX_HEARTS;
 /**
  * Choose colors for game
  * @param {[number]} min minimum difference
@@ -139,6 +143,8 @@ function chooseColors(min = getMin(), max = getMax()) {
 		option.textContent = '';
 		option.removeAttribute('disabled');
 	}
+
+	heartHTML();
 }
 
 chooseColors();
@@ -149,15 +155,28 @@ function onClick(index, element) {
 		alert('Correct!');
 		chooseColors();
 	} else {
-		alert(`Nope! That\'s ${rgbToHex(colors[index])}`);
 		let {L} = rgbToLab(colors[index]);
 		element.style.color = L > 50 ? 'black' : 'white';
 		element.textContent = rgbToHex(colors[index]);
 		element.setAttribute('disabled', true);
 		colors[index] = null;
+		lives--;
+		heartHTML(lives);
+		livesEl.classList.add('shake');
+		setTimeout(() => livesEl.classList.remove('shake'), 1000);
 	}
 }
 
 for (let [i, option] of options.entries()) {
 	option.addEventListener('click', () => onClick(i, option));
+}
+
+function heartHTML(count = MAX_HEARTS) {
+	let html = '';
+	for (let i = 0; i < MAX_HEARTS; i++) {
+		html += `<span style="opacity: ${
+			i >= count ? 0.25 : 1
+		};">\u2665</span>`;
+	}
+	livesEl.innerHTML = html;
 }
