@@ -1,5 +1,5 @@
 const answerEl = document.getElementById('answer');
-const options = document.querySelectorAll('.option');
+const optionsParent = document.getElementById('options');
 const btnEasy = document.getElementById('difficulty-easy');
 const btnMedium = document.getElementById('difficulty-medium');
 const btnHard = document.getElementById('difficulty-hard');
@@ -7,6 +7,11 @@ const livesEl = document.getElementById('lives');
 const scoreEl = document.getElementById('score');
 
 const MAX_HEARTS = 7;
+const NUM_OPTIONS = 5;
+const option_html = '<div class="option" role="button"></div>';
+
+optionsParent.innerHTML = option_html.repeat(NUM_OPTIONS);
+const options = document.querySelectorAll('.option');
 
 const DIFFICULTIES = {
 	easy: {
@@ -139,15 +144,15 @@ let score = 0;
  * Choose colors for game
  * @param {[number]} min minimum difference
  * @param {[number]} max maximum difference
- * @returns {[number, number, number][]} 5 RGB colors
+ * @returns {[number, number, number][]} RGB colors
  */
 function chooseColors(min = getMin(), max = getMax()) {
 	answer = chooseRandomRgb();
 	answerEl.innerText = rgbToHex(answer);
 	colors = [answer];
 
-	// Choose 5 colors
-	while (colors.length < 5) {
+	// Choose rest of colors
+	while (colors.length < NUM_OPTIONS) {
 		let color = chooseRandomRgb();
 		let diff = getDiff(color, answer);
 		if (diff > min && diff < max) colors.push(color);
