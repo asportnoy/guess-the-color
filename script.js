@@ -180,6 +180,7 @@ function onClick(index, element) {
 			chooseColors();
 		}
 	}
+	document.body.focus();
 }
 
 for (let [i, option] of options.entries()) {
