@@ -154,8 +154,14 @@ function chooseColors(min = getMin(), max = getMax()) {
 	// Choose rest of colors
 	while (colors.length < NUM_OPTIONS) {
 		let color = chooseRandomRgb();
-		let diff = getDiff(color, answer);
-		if (diff > min && diff < max) colors.push(color);
+		let answerDiff = getDiff(color, answer);
+		let allDiffs = colors.map(c => getDiff(color, c));
+		if (
+			answerDiff > min &&
+			answerDiff < max &&
+			allDiffs.every(diff => diff > 10)
+		)
+			colors.push(color);
 	}
 
 	// Randomize array
