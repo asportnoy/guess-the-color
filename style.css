@@ -55,6 +55,32 @@ body,
 	color: #ff0000;
 }
 
+.button {
+	border: none;
+	margin: 0;
+	padding: 10px 20px;
+	border-radius: 5px;
+	background-color: #eeeeee;
+	color: inherit;
+	font: inherit;
+	line-height: normal;
+	-webkit-font-smoothing: inherit;
+	-moz-osx-font-smoothing: inherit;
+	-webkit-appearance: none;
+	cursor: pointer;
+	transition: background-color 0.25s ease-in-out;
+}
+
+.button:not(.active):hover {
+	background-color: #dddddd;
+}
+
+.active {
+	background-color: #333333;
+	color: #ffffff;
+	cursor: not-allowed;
+}
+
 .shake {
 	-webkit-animation: shake 1s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 	animation: shake 1s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
