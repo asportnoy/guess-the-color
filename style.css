@@ -23,8 +23,9 @@ body,
 	margin: 3px 0px;
 }
 
-#difficulties {
-	margin: 10px 0px 40px 0px;
+#highscore {
+	font-size: 1.5em;
+	margin: 10px 0px 30px 0px;
 }
 
 h1 {

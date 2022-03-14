@@ -5,6 +5,7 @@ const btnMedium = document.getElementById('difficulty-medium');
 const btnHard = document.getElementById('difficulty-hard');
 const livesEl = document.getElementById('lives');
 const scoreEl = document.getElementById('score');
+const highScoreEl = document.getElementById('highscore');
 
 const MAX_HEARTS = 7;
 const NUM_OPTIONS = 6;
@@ -42,11 +43,15 @@ function setDifficulty(diff) {
 	}
 	lives = MAX_HEARTS;
 	score = 0;
+	highScore = parseInt(
+		window.localStorage.getItem(`gtc-highscore-${diff}`) || 0,
+	);
 	difficulty = diff;
 	window.localStorage.setItem('gtc-mode', diff);
 	Object.entries(DIFFICULTIES).forEach(([key, {el}]) => {
 		el.classList[diff === key ? 'add' : 'remove']('active');
 	});
+	highScoreEl.innerText = `High Score: ${highScore.toLocaleString()}`;
 	chooseColors();
 }
 
@@ -143,6 +148,7 @@ let answer;
 let colors;
 let lives;
 let score;
+let highScore;
 let difficulty;
 
 /**
@@ -195,6 +201,11 @@ function chooseColors(min = getMin(), max = getMax()) {
 	// Update HTML
 	heartHTML(lives);
 	scoreEl.textContent = `Score: ${score.toLocaleString()}`;
+	if (score > highScore) {
+		highScore = score;
+		highScoreEl.innerText = `High Score: ${highScore.toLocaleString()}`;
+		window.localStorage.setItem(`gtc-highscore-${difficulty}`, highScore);
+	}
 }
 
 let stopShakeTimeout;
