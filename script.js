@@ -137,6 +137,7 @@ function chooseColors(min = getMin(), max = getMax()) {
 		option.style.backgroundColor = rgbToHex(colors[i]);
 		option.style.color = '';
 		option.textContent = '';
+		option.removeAttribute('disabled');
 	}
 }
 
