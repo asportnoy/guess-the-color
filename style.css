@@ -12,10 +12,36 @@ body,
 	justify-content: center;
 }
 
+#header {
+	margin: 10px 0px;
+	display: flex;
+	flex-direction: column;
+}
+
+#header * {
+	text-align: center;
+	margin: 3px 0px;
+}
+
+#difficulties {
+	margin: 10px 0px 40px 0px;
+}
+
+h1 {
+	font-size: 2.5em;
+}
+
+a,
+a:active,
+a:hover,
+a:focus {
+	color: inherit;
+}
+
 #answer {
 	text-align: center;
 	font-size: 4.5em;
-	margin: 20px 0px;
+	margin: 10px 0px;
 }
 
 #options {
@@ -23,6 +49,7 @@ body,
 	flex-wrap: wrap;
 	justify-content: center;
 	gap: 1em;
+	margin: 10px 0px;
 }
 
 .option {
