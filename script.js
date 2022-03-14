@@ -25,17 +25,29 @@ const DIFFICULTIES = {
 
 let difficulty = 'medium';
 
+function checkReset() {
+	if (score !== 0 || lives !== MAX_HEARTS) {
+		if (!confirm('Are you sure you want to reset?')) return false;
+		lives = MAX_HEARTS;
+		score = 0;
+	}
+	return true;
+}
+
 btnEasy.addEventListener('click', () => {
+	checkReset();
 	difficulty = 'easy';
 	chooseColors();
 });
 
 btnMedium.addEventListener('click', () => {
+	checkReset();
 	difficulty = 'medium';
 	chooseColors();
 });
 
 btnHard.addEventListener('click', () => {
+	checkReset();
 	difficulty = 'hard';
 	chooseColors();
 });
