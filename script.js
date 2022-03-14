@@ -167,10 +167,10 @@ function chooseColors(min = getMin(), max = getMax()) {
 		: [255, 255, 255];
 	answer = chooseRandomRgb();
 	if (getDiff(answer, bgColor) < 10) return chooseRandomRgb(min, max);
-	answerEl.innerText = rgbToHex(answer);
 	colors = [answer];
 
 	// Choose rest of colors
+	let i = 0;
 	while (colors.length < NUM_OPTIONS) {
 		let color = chooseRandomRgb();
 		let answerDiff = getDiff(color, answer);
@@ -185,6 +185,8 @@ function chooseColors(min = getMin(), max = getMax()) {
 			bgDiff > 10
 		)
 			colors.push(color);
+		i++;
+		if (i > 10000) return chooseRandomRgb(min, max); // Got stuck generating colors, start over.
 	}
 
 	// Randomize array
@@ -199,6 +201,7 @@ function chooseColors(min = getMin(), max = getMax()) {
 	}
 
 	// Update HTML
+	answerEl.innerText = rgbToHex(answer);
 	heartHTML(lives);
 	scoreEl.textContent = `Score: ${score.toLocaleString()}`;
 	if (score > highScore) {
