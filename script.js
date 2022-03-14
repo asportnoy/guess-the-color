@@ -137,14 +137,8 @@ function chooseColors(min = getMin(), max = getMax()) {
 	// Choose 5 colors
 	while (colors.length < 5) {
 		let color = chooseRandomRgb();
-		if (
-			colors.every(c => {
-				let diff = getDiff(c, color);
-				return diff > min && diff < max;
-			})
-		) {
-			colors.push(color);
-		}
+		let diff = getDiff(color, answer);
+		if (diff > min && diff < max) colors.push(color);
 	}
 
 	// Randomize array
