@@ -17,62 +17,51 @@ const DIFFICULTIES = {
 	easy: {
 		min: 40,
 		max: 60,
+		el: btnEasy,
 	},
 	medium: {
 		min: 20,
 		max: 40,
+		el: btnMedium,
 	},
 	hard: {
 		min: 10,
 		max: 20,
+		el: btnHard,
 	},
 };
 
-let difficulty = 'medium';
-
 /**
- * Confirm resetting game if in progress
- * @returns {boolean} Whether to reset
+ * Change difficulty
+ * @param {string} diff Difficulty to change to
  */
-function checkReset() {
-	if (score !== 0 || lives !== MAX_HEARTS) {
-		if (!confirm('Are you sure you want to reset?')) return false;
-		lives = MAX_HEARTS;
-		score = 0;
+function setDifficulty(diff) {
+	if (difficulty === diff) return;
+	if (score || (lives && lives !== MAX_HEARTS)) {
+		if (!confirm('Are you sure you want to reset?')) return;
 	}
-	return true;
+	lives = MAX_HEARTS;
+	score = 0;
+	difficulty = diff;
+	window.localStorage.setItem('gtc-mode', diff);
+	Object.entries(DIFFICULTIES).forEach(([key, {el}]) => {
+		el.classList[diff === key ? 'add' : 'remove']('active');
+	});
+	chooseColors();
 }
 
-// Mode handlers
+// Mode button handlers
 
 btnEasy.addEventListener('click', () => {
-	if (difficulty === 'easy') return;
-	if (!checkReset()) return;
-	difficulty = 'easy';
-	btnEasy.classList.add('active');
-	btnMedium.classList.remove('active');
-	btnHard.classList.remove('active');
-	chooseColors();
+	setDifficulty('easy');
 });
 
 btnMedium.addEventListener('click', () => {
-	if (difficulty === 'medium') return;
-	if (!checkReset()) return;
-	difficulty = 'medium';
-	btnEasy.classList.remove('active');
-	btnMedium.classList.add('active');
-	btnHard.classList.remove('active');
-	chooseColors();
+	setDifficulty('medium');
 });
 
 btnHard.addEventListener('click', () => {
-	if (difficulty === 'hard') return;
-	if (!checkReset()) return;
-	difficulty = 'hard';
-	btnEasy.classList.remove('active');
-	btnMedium.classList.remove('active');
-	btnHard.classList.add('active');
-	chooseColors();
+	setDifficulty('hard');
 });
 
 /**
@@ -152,8 +141,10 @@ function getDiff(color1, color2) {
 
 let answer;
 let colors;
-let lives = MAX_HEARTS;
-let score = 0;
+let lives;
+let score;
+let difficulty;
+
 /**
  * Choose colors for round
  * @param {[number]} min minimum difference
@@ -205,8 +196,6 @@ function chooseColors(min = getMin(), max = getMax()) {
 	heartHTML(lives);
 	scoreEl.textContent = `Score: ${score.toLocaleString()}`;
 }
-// Init
-chooseColors();
 
 let stopShakeTimeout;
 /**
@@ -271,3 +260,6 @@ function heartHTML(count = MAX_HEARTS) {
 	}
 	livesEl.innerHTML = html;
 }
+
+// Start game
+setDifficulty(window.localStorage.getItem('gtc-mode') || 'medium');
