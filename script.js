@@ -1,5 +1,48 @@
 const answerEl = document.getElementById('answer');
 const options = document.querySelectorAll('.option');
+const btnEasy = document.getElementById('difficulty-easy');
+const btnMedium = document.getElementById('difficulty-medium');
+const btnHard = document.getElementById('difficulty-hard');
+
+const DIFFICULTIES = {
+	easy: {
+		min: 40,
+		max: 60,
+	},
+	medium: {
+		min: 20,
+		max: 40,
+	},
+	hard: {
+		min: 0,
+		max: 20,
+	},
+};
+
+let difficulty = 'medium';
+
+btnEasy.addEventListener('click', () => {
+	difficulty = 'easy';
+	chooseColors();
+});
+
+btnMedium.addEventListener('click', () => {
+	difficulty = 'medium';
+	chooseColors();
+});
+
+btnHard.addEventListener('click', () => {
+	difficulty = 'hard';
+	chooseColors();
+});
+
+function getMin() {
+	return DIFFICULTIES[difficulty].min;
+}
+
+function getMax() {
+	return DIFFICULTIES[difficulty].max;
+}
 
 /**
  * Choose a random RGB color
@@ -68,7 +111,7 @@ let colors;
  * @param {[number]} max maximum difference
  * @returns {[number, number, number][]} 5 RGB colors
  */
-function chooseColors(min = 25, max = 50) {
+function chooseColors(min = getMin(), max = getMax()) {
 	answer = chooseRandomRgb();
 	answerEl.innerText = rgbToHex(answer);
 	colors = [answer];
