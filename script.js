@@ -164,6 +164,11 @@ function onClick(index, element) {
 		heartHTML(lives);
 		livesEl.classList.add('shake');
 		setTimeout(() => livesEl.classList.remove('shake'), 1000);
+		if (lives <= 0) {
+			alert('Game Over!');
+			lives = MAX_HEARTS;
+			chooseColors();
+		}
 	}
 }
 
