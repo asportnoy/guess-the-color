@@ -6,7 +6,7 @@ const btnHard = document.getElementById('difficulty-hard');
 const livesEl = document.getElementById('lives');
 const scoreEl = document.getElementById('score');
 
-const MAX_HEARTS = 5;
+const MAX_HEARTS = 7;
 
 const DIFFICULTIES = {
 	easy: {
