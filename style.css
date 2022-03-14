@@ -167,4 +167,13 @@ a:focus {
 		background-color: #333333;
 		color: white;
 	}
+
+	.button:not(.active) {
+		background-color: #555555;
+		color: white;
+	}
+
+	.button:not(.active):hover {
+		background-color: #777777;
+	}
 }
