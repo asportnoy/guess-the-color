@@ -184,18 +184,19 @@ function onClick(index, element) {
 		colors[index] = null;
 		lives--;
 		heartHTML(lives);
-		clearTimeout(stopShakeTimeout);
-		livesEl.classList.remove('shake');
-		livesEl.classList.add('shake');
-		stopShakeTimeout = setTimeout(
-			() => livesEl.classList.remove('shake'),
-			1000,
-		);
 		if (lives <= 0) {
 			alert('Game Over!');
 			lives = MAX_HEARTS;
 			score = 0;
 			chooseColors();
+		} else {
+			clearTimeout(stopShakeTimeout);
+			livesEl.classList.remove('shake');
+			livesEl.classList.add('shake');
+			stopShakeTimeout = setTimeout(
+				() => livesEl.classList.remove('shake'),
+				1000,
+			);
 		}
 	}
 	document.body.focus();
