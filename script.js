@@ -161,7 +161,15 @@ let score = 0;
  * @returns {[number, number, number][]} RGB colors
  */
 function chooseColors(min = getMin(), max = getMax()) {
+	let bgColor = document.body.style.backgroundColor
+		? window
+				.getComputedStyle(document.body)
+				.backgroundColor.match(/rgba?\((\d+), (\d+), (\d+)(?:, \d+)?\)/)
+				.slice(1)
+				.map(x => parseInt(x))
+		: [255, 255, 255];
 	answer = chooseRandomRgb();
+	if (getDiff(answer, bgColor) < 10) return chooseRandomRgb(min, max);
 	answerEl.innerText = rgbToHex(answer);
 	colors = [answer];
 
@@ -170,11 +178,14 @@ function chooseColors(min = getMin(), max = getMax()) {
 		let color = chooseRandomRgb();
 		let answerDiff = getDiff(color, answer);
 		let allDiffs = colors.map(c => getDiff(color, c));
+
+		let bgDiff = getDiff(color, bgColor);
 		// Check that color is not too similar to answer or other colors
 		if (
 			answerDiff > min &&
 			answerDiff < max &&
-			allDiffs.every(diff => diff > 10)
+			allDiffs.every(diff => diff > 10) &&
+			bgDiff > 10
 		)
 			colors.push(color);
 	}
