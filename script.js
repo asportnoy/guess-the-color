@@ -152,6 +152,7 @@ function chooseColors(min = getMin(), max = getMax()) {
 
 chooseColors();
 
+let stopShakeTimeout;
 function onClick(index, element) {
 	if (colors[index] == null) return;
 	if (answer === colors[index]) {
@@ -165,8 +166,13 @@ function onClick(index, element) {
 		colors[index] = null;
 		lives--;
 		heartHTML(lives);
+		clearTimeout(stopShakeTimeout);
+		livesEl.classList.remove('shake');
 		livesEl.classList.add('shake');
-		setTimeout(() => livesEl.classList.remove('shake'), 1000);
+		stopShakeTimeout = setTimeout(
+			() => livesEl.classList.remove('shake'),
+			1000,
+		);
 		if (lives <= 0) {
 			alert('Game Over!');
 			lives = MAX_HEARTS;
