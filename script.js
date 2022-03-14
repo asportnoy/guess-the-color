@@ -146,7 +146,7 @@ function chooseColors(min = getMin(), max = getMax()) {
 		option.removeAttribute('disabled');
 	}
 
-	heartHTML();
+	heartHTML(lives);
 	scoreEl.textContent = `Score: ${score.toLocaleString()}`;
 }
 
@@ -156,8 +156,8 @@ let stopShakeTimeout;
 function onClick(index, element) {
 	if (colors[index] == null) return;
 	if (answer === colors[index]) {
-		chooseColors();
 		score++;
+		chooseColors();
 	} else {
 		let {L} = rgbToLab(colors[index]);
 		element.style.color = L > 50 ? 'black' : 'white';
