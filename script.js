@@ -142,6 +142,7 @@ function chooseColors(min = getMin(), max = getMax()) {
 chooseColors();
 
 function onClick(index, element) {
+	if (colors[index] == null) return;
 	if (answer === colors[index]) {
 		alert('Correct!');
 		chooseColors();
@@ -149,6 +150,7 @@ function onClick(index, element) {
 		alert(`Nope! That\'s ${rgbToHex(colors[index])}`);
 		element.textContent = rgbToHex(colors[index]);
 		element.setAttribute('disabled', true);
+		colors[index] = null;
 	}
 }
 
