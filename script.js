@@ -14,7 +14,7 @@ const DIFFICULTIES = {
 		max: 40,
 	},
 	hard: {
-		min: 0,
+		min: 10,
 		max: 20,
 	},
 };
