@@ -41,8 +41,10 @@ body,
 	transform: scale(0.9);
 }
 
-.option:not([disabled]):hover {
-	transform: scale(1.25);
+@media (hover) {
+	.option:not([disabled]):hover {
+		transform: scale(1.25);
+	}
 }
 
 #score {
