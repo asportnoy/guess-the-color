@@ -14,8 +14,8 @@ body,
 
 #answer {
 	text-align: center;
-	font-size: 5em;
-	margin-bottom: 20px;
+	font-size: 4.5em;
+	margin: 20px 0px;
 }
 
 #options {
@@ -43,6 +43,10 @@ body,
 
 .option:not([disabled]):hover {
 	transform: scale(1.25);
+}
+
+#score {
+	font-size: 2.5em;
 }
 
 #lives {

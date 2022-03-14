@@ -4,6 +4,7 @@ const btnEasy = document.getElementById('difficulty-easy');
 const btnMedium = document.getElementById('difficulty-medium');
 const btnHard = document.getElementById('difficulty-hard');
 const livesEl = document.getElementById('lives');
+const scoreEl = document.getElementById('score');
 
 const MAX_HEARTS = 5;
 
@@ -109,6 +110,7 @@ function getDiff(color1, color2) {
 let answer;
 let colors;
 let lives = MAX_HEARTS;
+let score = 0;
 /**
  * Choose colors for game
  * @param {[number]} min minimum difference
@@ -145,6 +147,7 @@ function chooseColors(min = getMin(), max = getMax()) {
 	}
 
 	heartHTML();
+	scoreEl.textContent = `Score: ${score.toLocaleString()}`;
 }
 
 chooseColors();
@@ -152,8 +155,8 @@ chooseColors();
 function onClick(index, element) {
 	if (colors[index] == null) return;
 	if (answer === colors[index]) {
-		alert('Correct!');
 		chooseColors();
+		score++;
 	} else {
 		let {L} = rgbToLab(colors[index]);
 		element.style.color = L > 50 ? 'black' : 'white';
@@ -167,6 +170,7 @@ function onClick(index, element) {
 		if (lives <= 0) {
 			alert('Game Over!');
 			lives = MAX_HEARTS;
+			score = 0;
 			chooseColors();
 		}
 	}
