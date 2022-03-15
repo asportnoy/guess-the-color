@@ -289,7 +289,7 @@ function onClick(index, element) {
 		// Give life back if 5 in a row correct
 		streak++;
 		if (streak >= 5 && lives < MAX_HEARTS) {
-			lives++;
+			// lives++;
 			streak = 0;
 		}
 		chooseColors();
