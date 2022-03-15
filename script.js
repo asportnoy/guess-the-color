@@ -275,8 +275,8 @@ let keys = ['1', '2', '3', '4', '5', '6'];
 let focusIndex;
 window.addEventListener('keydown', e => {
 	if (keys.includes(e.key)) {
-		let index = keys.indexOf(e.key);
-		onClick(index, options[index]);
+		focusIndex = keys.indexOf(e.key);
+		options[focusIndex].focus();
 	}
 
 	if (e.key === 'ArrowRight') {
