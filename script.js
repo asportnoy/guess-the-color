@@ -197,8 +197,9 @@ function chooseColors(min = getMin(), max = getMax()) {
 	// Set element colors
 	for (let [i, option] of options.entries()) {
 		option.style.backgroundColor = rgbToHex(colors[i]);
-		option.style.color = '';
-		option.textContent = '';
+		let {L} = rgbToLab(colors[i]);
+		option.style.color = L > 50 ? 'black' : 'white';
+		option.textContent = i + 1;
 		option.removeAttribute('disabled');
 	}
 
@@ -234,8 +235,6 @@ function onClick(index, element) {
 	} else {
 		//Incorrect
 		// Set styles on button
-		let {L} = rgbToLab(colors[index]);
-		element.style.color = L > 50 ? 'black' : 'white';
 		element.textContent = rgbToHex(colors[index]);
 		// Disable button
 		element.setAttribute('disabled', true);
@@ -270,6 +269,15 @@ function onClick(index, element) {
 for (let [i, option] of options.entries()) {
 	option.addEventListener('click', () => onClick(i, option));
 }
+
+// Keypress event listener
+let keys = ['1', '2', '3', '4', '5', '6'];
+window.addEventListener('keydown', e => {
+	if (keys.includes(e.key)) {
+		let index = keys.indexOf(e.key);
+		onClick(index, options[index]);
+	}
+});
 
 /**
  * Update heart display
