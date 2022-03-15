@@ -280,6 +280,7 @@ let stopShakeTimeout;
  */
 function onClick(index, element) {
 	if (guessed[index]) return; // Button was disabled
+	focusIndex = index;
 	if (answer.every((x, i) => x === colors[index][i])) {
 		// Correct
 		score++;
