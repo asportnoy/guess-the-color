@@ -43,6 +43,7 @@ function setDifficulty(diff) {
 	}
 	lives = MAX_HEARTS;
 	score = 0;
+	streak = 0;
 	highScore = parseInt(
 		window.localStorage.getItem(`gtc-highscore-${diff}`) || 0,
 	);
@@ -148,6 +149,7 @@ let answer;
 let colors;
 let lives;
 let score;
+let streak;
 let highScore;
 let difficulty;
 
@@ -222,6 +224,12 @@ function onClick(index, element) {
 	if (answer === colors[index]) {
 		// Correct
 		score++;
+		// Give life back if 5 in a row correct
+		streak++;
+		if (streak >= 5 && lives < MAX_HEARTS) {
+			lives++;
+			streak = 0;
+		}
 		chooseColors();
 	} else {
 		//Incorrect
@@ -235,6 +243,8 @@ function onClick(index, element) {
 		// Reduce lives
 		lives--;
 		heartHTML(lives);
+		// Reset streak
+		streak = 0;
 
 		if (lives <= 0) {
 			// Game over
