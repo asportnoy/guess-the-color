@@ -83,7 +83,6 @@ function loadGame() {
  * @param {boolean} [initial=false] Whether this is the initial difficulty change
  */
 function setDifficulty(diff, initial) {
-	if (difficulty === diff) return;
 	if (!initial && (score || (lives && lives !== MAX_HEARTS))) {
 		if (!confirm('Are you sure you want to reset?')) return;
 	}

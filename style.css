@@ -123,7 +123,6 @@ a:focus {
 .active {
 	background-color: #4caf50;
 	color: #ffffff;
-	cursor: not-allowed;
 }
 
 .shake {
