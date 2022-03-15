@@ -272,10 +272,33 @@ for (let [i, option] of options.entries()) {
 
 // Keypress event listener
 let keys = ['1', '2', '3', '4', '5', '6'];
+let focusIndex;
 window.addEventListener('keydown', e => {
 	if (keys.includes(e.key)) {
 		let index = keys.indexOf(e.key);
 		onClick(index, options[index]);
+	}
+
+	if (e.key === 'ArrowRight') {
+		if (focusIndex == null) focusIndex = 0;
+		else {
+			do {
+				focusIndex++;
+				if (focusIndex >= options.length) focusIndex = 0;
+			} while (colors[focusIndex] === null);
+		}
+		options[focusIndex].focus();
+	}
+
+	if (e.key === 'ArrowLeft') {
+		if (focusIndex == null) focusIndex = options.length - 1;
+		else {
+			do {
+				focusIndex--;
+				if (focusIndex < 0) focusIndex = options.length - 1;
+			} while (colors[focusIndex] === null);
+		}
+		options[focusIndex].focus();
 	}
 });
 
