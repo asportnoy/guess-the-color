@@ -280,7 +280,7 @@ let stopShakeTimeout;
  */
 function onClick(index, element) {
 	if (guessed[index]) return; // Button was disabled
-	if (answer === colors[index]) {
+	if (answer.every((x, i) => x === colors[index][i])) {
 		// Correct
 		score++;
 		// Give life back if 5 in a row correct
