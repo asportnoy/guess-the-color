@@ -62,6 +62,7 @@ a:focus {
 	-webkit-font-smoothing: inherit;
 	-moz-osx-font-smoothing: inherit;
 	-webkit-appearance: none;
+	outline: none;
 	width: 100px;
 	height: 100px;
 	display: flex;
@@ -80,7 +81,8 @@ a:focus {
 }
 
 @media (hover) {
-	.option:not([disabled]):hover {
+	.option:not([disabled]):hover,
+	.option:not([disabled]):focus {
 		transform: scale(1.25);
 	}
 }
