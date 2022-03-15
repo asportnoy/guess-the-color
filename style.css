@@ -81,10 +81,13 @@ a:focus {
 }
 
 @media (hover) {
-	.option:not([disabled]):hover,
-	.option:not([disabled]):focus {
+	.option:not([disabled]):hover {
 		transform: scale(1.25);
 	}
+}
+
+.option:not([disabled]):focus {
+	transform: scale(1.25);
 }
 
 #score {
