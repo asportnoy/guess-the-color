@@ -9,7 +9,7 @@ const highScoreEl = document.getElementById('highscore');
 
 const MAX_HEARTS = 7;
 const NUM_OPTIONS = 6;
-const option_html = '<div class="option" role="button"></div>';
+const option_html = '<button class="option"></button>';
 
 optionsParent.innerHTML = option_html.repeat(NUM_OPTIONS);
 const options = document.querySelectorAll('.option');
