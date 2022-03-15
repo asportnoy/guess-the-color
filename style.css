@@ -61,12 +61,14 @@ a:focus {
 	justify-content: center;
 	border-radius: 50%;
 	cursor: pointer;
-	transition: transform 0.25s ease-in-out;
+	transition: all 0.25s ease-in-out;
+	font-size: 2em;
 }
 
 .option[disabled] {
 	cursor: not-allowed;
 	transform: scale(0.9);
+	font-size: 1em;
 }
 
 @media (hover) {
