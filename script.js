@@ -211,8 +211,11 @@ function chooseColors(min = getMin(), max = getMax()) {
 				.slice(1)
 				.map(x => parseInt(x))
 		: [255, 255, 255];
-	answer = chooseRandomRgb();
-	if (getDiff(answer, bgColor) < 10) return chooseRandomRgb(min, max);
+
+	do {
+		answer = chooseRandomRgb();
+	} while (getDiff(answer, bgColor) < 10);
+
 	colors = [answer];
 
 	// Choose rest of colors
@@ -232,7 +235,7 @@ function chooseColors(min = getMin(), max = getMax()) {
 		)
 			colors.push(color);
 		i++;
-		if (i > 10000) return chooseRandomRgb(min, max); // Got stuck generating colors, start over.
+		if (i > 10000) return chooseColors(min, max); // Got stuck generating colors, start over.
 	}
 
 	// Randomize array
