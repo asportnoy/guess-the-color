@@ -9,7 +9,7 @@ const highScoreEl = document.getElementById('highscore');
 
 const MAX_HEARTS = 7;
 const NUM_OPTIONS = 6;
-const option_html = '<button class="option"></button>';
+const option_html = '<button class="option" tabindex="0"></button>';
 
 optionsParent.innerHTML = option_html.repeat(NUM_OPTIONS);
 const options = document.querySelectorAll('.option');
@@ -268,6 +268,7 @@ function onClick(index, element) {
 // Add event listeners
 for (let [i, option] of options.entries()) {
 	option.addEventListener('click', () => onClick(i, option));
+	option.addEventListener('focus', () => (focusIndex = i));
 }
 
 // Keypress event listener
