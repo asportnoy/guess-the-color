@@ -33,17 +33,60 @@ const DIFFICULTIES = {
 };
 
 /**
- * Change difficulty
- * @param {string} diff Difficulty to change to
+ * Reset game
  */
-function setDifficulty(diff) {
-	if (difficulty === diff) return;
-	if (score || (lives && lives !== MAX_HEARTS)) {
-		if (!confirm('Are you sure you want to reset?')) return;
-	}
+function reset() {
 	lives = MAX_HEARTS;
 	score = 0;
 	streak = 0;
+	window.localStorage.removeItem(`gtc-game`);
+	chooseColors();
+}
+
+/**
+ * Save game to local storage
+ */
+function saveGame() {
+	let json = {
+		answer,
+		colors,
+		guessed,
+		lives,
+		score,
+		streak,
+	};
+
+	window.localStorage.setItem(`gtc-game`, JSON.stringify(json));
+}
+
+/**
+ * Load game from local storage
+ */
+function loadGame() {
+	let state = window.localStorage.getItem(`gtc-game`);
+	if (!state) return reset();
+	state = JSON.parse(state);
+
+	answer = state.answer;
+	colors = state.colors;
+	guessed = state.guessed;
+	lives = state.lives;
+	score = state.score;
+	streak = state.streak;
+
+	update();
+}
+
+/**
+ * Change difficulty
+ * @param {string} diff Difficulty to change to
+ * @param {boolean} [initial=false] Whether this is the initial difficulty change
+ */
+function setDifficulty(diff, initial) {
+	if (difficulty === diff) return;
+	if (!initial && (score || (lives && lives !== MAX_HEARTS))) {
+		if (!confirm('Are you sure you want to reset?')) return;
+	}
 	highScore = parseInt(
 		window.localStorage.getItem(`gtc-highscore-${diff}`) || 0,
 	);
@@ -53,7 +96,7 @@ function setDifficulty(diff) {
 		el.classList[diff === key ? 'add' : 'remove']('active');
 	});
 	highScoreEl.innerText = `High Score: ${highScore.toLocaleString()}`;
-	chooseColors();
+	if (!initial) reset();
 }
 
 // Mode button handlers
@@ -147,6 +190,7 @@ function getDiff(color1, color2) {
 
 let answer;
 let colors;
+let guessed;
 let lives;
 let score;
 let streak;
@@ -194,13 +238,27 @@ function chooseColors(min = getMin(), max = getMax()) {
 	// Randomize array
 	colors = colors.sort(() => Math.random() - 0.5);
 
+	guessed = new Array(NUM_OPTIONS).fill(false);
+
+	update();
+}
+
+/**
+ * Update game elements
+ */
+function update() {
 	// Set element colors
 	for (let [i, option] of options.entries()) {
 		option.style.backgroundColor = rgbToHex(colors[i]);
 		let {L} = rgbToLab(colors[i]);
 		option.style.color = L > 50 ? 'black' : 'white';
-		option.textContent = i + 1;
-		option.removeAttribute('disabled');
+		if (guessed[i]) {
+			option.textContent = rgbToHex(colors[i]);
+			option.setAttribute('disabled', true);
+		} else {
+			option.textContent = i + 1;
+			option.removeAttribute('disabled');
+		}
 	}
 
 	// Update HTML
@@ -221,7 +279,7 @@ let stopShakeTimeout;
  * @param {HTMLElement} element The button that was clicked
  */
 function onClick(index, element) {
-	if (colors[index] == null) return; // Button was disabled
+	if (guessed[index]) return; // Button was disabled
 	if (answer === colors[index]) {
 		// Correct
 		score++;
@@ -233,25 +291,19 @@ function onClick(index, element) {
 		}
 		chooseColors();
 	} else {
-		//Incorrect
-		// Set styles on button
-		element.textContent = rgbToHex(colors[index]);
 		// Disable button
-		element.setAttribute('disabled', true);
-		colors[index] = null;
+		guessed[index] = true;
 		// Reduce lives
 		lives--;
-		heartHTML(lives);
 		// Reset streak
 		streak = 0;
+
+		update();
 
 		if (lives <= 0) {
 			// Game over
 			alert(`Game Over! Score: ${score.toLocaleString()}`);
-			// Reset
-			lives = MAX_HEARTS;
-			score = 0;
-			chooseColors();
+			reset();
 		} else {
 			// Shake hearts
 			clearTimeout(stopShakeTimeout);
@@ -263,6 +315,8 @@ function onClick(index, element) {
 			);
 		}
 	}
+
+	saveGame();
 }
 
 // Add event listeners
@@ -286,7 +340,7 @@ window.addEventListener('keydown', e => {
 			do {
 				focusIndex++;
 				if (focusIndex >= options.length) focusIndex = 0;
-			} while (colors[focusIndex] === null);
+			} while (guessed[focusIndex]);
 		}
 		options[focusIndex].focus();
 	}
@@ -297,7 +351,7 @@ window.addEventListener('keydown', e => {
 			do {
 				focusIndex--;
 				if (focusIndex < 0) focusIndex = options.length - 1;
-			} while (colors[focusIndex] === null);
+			} while (guessed[focusIndex]);
 		}
 		options[focusIndex].focus();
 	}
@@ -318,4 +372,5 @@ function heartHTML(count = MAX_HEARTS) {
 }
 
 // Start game
-setDifficulty(window.localStorage.getItem('gtc-mode') || 'medium');
+setDifficulty(window.localStorage.getItem('gtc-mode') || 'medium', true);
+loadGame();
