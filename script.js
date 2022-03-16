@@ -1,8 +1,13 @@
+const pageHome = document.getElementById('home');
+const pageGame = document.getElementById('game');
 const answerEl = document.getElementById('answer');
 const optionsParent = document.getElementById('options');
 const btnEasy = document.getElementById('difficulty-easy');
 const btnMedium = document.getElementById('difficulty-medium');
 const btnHard = document.getElementById('difficulty-hard');
+const btnPlay = document.getElementById('btn-play');
+const btnHome = document.getElementById('btn-home');
+const difficultyEl = document.getElementById('difficulty');
 const livesEl = document.getElementById('lives');
 const scoreEl = document.getElementById('score');
 const highScoreEl = document.getElementById('highscore');
@@ -33,6 +38,16 @@ const DIFFICULTIES = {
 };
 
 /**
+ * Start game
+ */
+function start() {
+	loadGame();
+
+	pageHome.style.display = 'none';
+	pageGame.style.display = '';
+}
+
+/**
  * Reset game
  */
 function reset() {
@@ -41,6 +56,9 @@ function reset() {
 	streak = 0;
 	window.localStorage.removeItem(`gtc-game`);
 	chooseColors();
+
+	pageHome.style.display = '';
+	pageGame.style.display = 'none';
 }
 
 /**
@@ -83,17 +101,15 @@ function loadGame() {
  * @param {boolean} [initial=false] Whether this is the initial difficulty change
  */
 function setDifficulty(diff, initial) {
-	if (!initial && (score || (lives && lives !== MAX_HEARTS))) {
-		if (!confirm('Are you sure you want to reset?')) return;
-	}
 	highScore = parseInt(
 		window.localStorage.getItem(`gtc-highscore-${diff}`) || 0,
 	);
 	difficulty = diff;
 	window.localStorage.setItem('gtc-mode', diff);
 	Object.entries(DIFFICULTIES).forEach(([key, {el}]) => {
-		el.classList[diff === key ? 'add' : 'remove']('active');
+		el.classList[diff === key ? 'add' : 'remove']('button-green');
 	});
+	difficultyEl.textContent = `Difficulty: ${difficulty}`;
 	highScoreEl.innerText = `High Score: ${highScore.toLocaleString()}`;
 	if (!initial) reset();
 }
@@ -374,6 +390,19 @@ function heartHTML(count = MAX_HEARTS) {
 	livesEl.innerHTML = html;
 }
 
-// Start game
 setDifficulty(window.localStorage.getItem('gtc-mode') || 'medium', true);
-loadGame();
+
+// Start game on load if one is already saved
+if (window.localStorage.getItem(`gtc-game`)) start();
+
+// Play button
+btnPlay.addEventListener('click', start);
+
+// Home button
+btnHome.addEventListener('click', () => {
+	if (score || (lives && lives !== MAX_HEARTS)) {
+		if (!confirm('Are you sure you want to reset?')) return;
+	}
+
+	reset();
+});

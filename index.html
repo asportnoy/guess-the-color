@@ -8,6 +8,9 @@
 	<title>Guess the color!</title>
 	<link rel="stylesheet" href="style.css">
 
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-P4EC51DWHB"></script>
 	<script>
 		if (window.location.host == 'albertp.dev') {
@@ -21,22 +24,41 @@
 </head>
 
 <body>
-	<div id="wrapper">
-		<div id="header">
-			<h1>Guess the color!</h1>
-			<span>By <a href="https://albertp.dev" target="_blank">Albert Portnoy</a></span>
-			<a href="https://github.com/asportnoy/guess-the-color" target="_blank" tabindex="-1">Source Code</a>
+	<div id="home" class="page">
+		<div class="page-flex">
+			<div id="header">
+				<h1>Guess the color!</h1>
+				<h2>By <a href="https://albertp.dev" target="_blank">Albert Portnoy</a></h2>
+				<a href="https://github.com/asportnoy/guess-the-color" target="_blank" tabindex="-1">Source Code</a>
+			</div>
+			<div class="group">
+				<div id="difficulties">
+					<h2>Difficulty</h2>
+					<button id="difficulty-easy" class="button" tabindex="-1">Easy</button>
+					<button id="difficulty-medium" class="button" tabindex="-1">Medium</button>
+					<button id="difficulty-hard" class="button" tabindex="-1">Hard</button>
+				</div>
+				<div id="highscore"></div>
+				<button id="btn-play" class="button button-green">Play!</button>
+			</div>
 		</div>
-		<div id="difficulties">
-			<button id="difficulty-easy" class="button" tabindex="-1">Easy</button>
-			<button id="difficulty-medium" class="button" tabindex="-1">Medium</button>
-			<button id="difficulty-hard" class="button" tabindex="-1">Hard</button>
+	</div>
+	<div id="game" class="page" style="display: none;">
+		<div class="top"><button id="btn-home" class="button">Go Home</button></div>
+		<div class="page-flex">
+			<div id="gameinfo" class="group">
+				<h1>Guess the color!</h1>
+				<h2 id="difficulty"></h2>
+			</div>
+			<div class="group">
+				<div id="lives"></div>
+				<div id="score"></div>
+			</div>
+			<div class="group">
+				<div id="answer"></div>
+				<div id="options"></div>
+			</div>
 		</div>
-		<div id="highscore"></div>
-		<div id="lives"></div>
-		<div id="score"></div>
-		<div id="answer"></div>
-		<div id="options"></div>
 	</div>
 
 	<script src="deltae.js"></script>
