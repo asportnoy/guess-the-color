@@ -198,8 +198,8 @@ let difficulty;
 
 /**
  * Choose colors for round
- * @param {[number]} min minimum difference
- * @param {[number]} max maximum difference
+ * @param {number} [min=getMin()] minimum difference
+ * @param {number} [max=getMax()] maximum difference
  * @returns {[number, number, number][]} RGB colors
  */
 function chooseColors(min = getMin(), max = getMax()) {
