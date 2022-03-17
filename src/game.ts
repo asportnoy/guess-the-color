@@ -35,6 +35,15 @@ export function isDifficulty(difficulty: unknown): difficulty is Difficulty {
 }
 
 /**
+ * Choose a random RGB color
+ */
+export function chooseRandomRgb(): RGB {
+	return new Array(3)
+		.fill(0)
+		.map(() => Math.floor(Math.random() * 256)) as RGB;
+}
+
+/**
  * Convert RGB to hex
  */
 export function rgbToHex(rgb: RGB): string {
@@ -76,15 +85,6 @@ export class Game {
 	 */
 	private getMax(): number {
 		return DIFFICULTIES[this.difficulty].max;
-	}
-
-	/**
-	 * Choose a random RGB color
-	 */
-	private chooseRandomRgb(): RGB {
-		return new Array(3)
-			.fill(0)
-			.map(() => Math.floor(Math.random() * 256)) as RGB;
 	}
 
 	/**
@@ -132,14 +132,14 @@ export class Game {
 		min: number = this.getMin(),
 		max: number = this.getMax(),
 	): void {
-		this.answer = this.chooseRandomRgb();
+		this.answer = chooseRandomRgb();
 
 		this.colors = [this.answer];
 
 		// Choose rest of colors
 		let i = 0;
 		while (this.colors.length < NUM_OPTIONS) {
-			let color = this.chooseRandomRgb();
+			let color = chooseRandomRgb();
 			let answerDiff = this.getDiff(color, this.answer);
 			let allDiffs = this.colors.map(c => this.getDiff(color, c));
 
