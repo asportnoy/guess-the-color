@@ -38,8 +38,13 @@ body,
 	flex-direction: column;
 }
 
+#join {
+	margin-top: 10px;
+}
+
 #header *,
 #difficulties *,
+#join h2,
 #gameinfo * {
 	text-align: center;
 }
@@ -52,6 +57,10 @@ body,
 #highscore {
 	font-size: 1.5em;
 	margin: 10px 0px;
+}
+
+#btn-play {
+	margin-left: 25px;
 }
 
 h1 {
@@ -141,6 +150,21 @@ a:focus {
 	color: #ff0000;
 }
 
+input {
+	border: 1px solid #cccccc;
+	outline: none;
+	margin: 0;
+	padding: 10px;
+	border-radius: 5px;
+	color: black;
+	font: inherit;
+	line-height: normal;
+	-webkit-font-smoothing: inherit;
+	-moz-osx-font-smoothing: inherit;
+	-webkit-appearance: none;
+	text-align: left;
+}
+
 .button {
 	border: none;
 	margin: 0;
@@ -227,12 +251,12 @@ a:focus {
 		color: white;
 	}
 
-	.button:not(.active) {
+	.button:not(.button-green) {
 		background-color: #555555;
 		color: white;
 	}
 
-	.button:not(.active):hover {
+	.button:not(.button-green):hover {
 		background-color: #777777;
 	}
 }
