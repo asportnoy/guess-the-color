@@ -5,7 +5,7 @@ import {v4 as uuidv4} from 'uuid';
 import {Difficulty, Game, isDifficulty} from './game';
 const app = express();
 const server = http.createServer(app);
-server.listen(8000);
+server.listen(process.env.PORT || 8000);
 
 app.use(express.static('frontend'));
 
