@@ -390,7 +390,7 @@ function heartHTML(count = MAX_HEARTS) {
 	livesEl.innerHTML = html;
 }
 
-setDifficulty(window.localStorage.getItem('gtc-mode') || 'medium', true);
+setDifficulty(window.localStorage.getItem('gtc-mode') || 'easy', true);
 
 // Start game on load if one is already saved
 if (window.localStorage.getItem(`gtc-game`)) start();

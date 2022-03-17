@@ -384,7 +384,7 @@ btnPlay.addEventListener('click', () => {
 	optionsParent.style.display = '';
 });
 
-setDifficulty(window.localStorage.getItem('gtc-multiplayer-mode') || 'medium');
+setDifficulty(window.localStorage.getItem('gtc-multiplayer-mode') || 'easy');
 
 if (window.location.hash.match(/^#[0-9A-F]{6}$/)) {
 	inputCode.value = window.location.hash.slice(1);
