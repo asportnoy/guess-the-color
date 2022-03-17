@@ -7,12 +7,15 @@ const btnMedium = document.getElementById('difficulty-medium');
 const btnHard = document.getElementById('difficulty-hard');
 const formJoin = document.getElementById('join');
 const inputCode = document.getElementById('code');
+const joinMessage = document.getElementById('join-message');
 const btnPlay = document.getElementById('btn-play');
 const btnHome = document.getElementById('btn-home');
 const difficultyEl = document.getElementById('difficulty');
+const codeEl = document.getElementById('display-code');
 const livesEl = document.getElementById('lives');
 const scoreEl = document.getElementById('score');
 const highScoreEl = document.getElementById('highscore');
+const noticeEl = document.getElementById('notice');
 
 const MAX_HEARTS = 7;
 const NUM_OPTIONS = 6;
@@ -46,9 +49,18 @@ function start() {
  */
 function reset() {
 	if (socket) socket.close();
+	connected = false;
+	inputCode.value = '';
 
 	pageHome.style.display = '';
 	pageGame.style.display = 'none';
+	btnPlay.removeAttribute('disabled');
+	formJoin.removeAttribute('disabled');
+	inputCode.removeAttribute('readonly');
+	joinMessage.style.display = 'none';
+	Object.values(DIFFICULTIES).forEach(({el}) => {
+		el.setAttribute('disabled', false);
+	});
 }
 
 /**
@@ -150,6 +162,24 @@ function update() {
 	scoreEl.textContent = `Score: ${score.toLocaleString()}`;
 }
 
+let noticeTimeout;
+/**
+ * Display notice text
+ * @param {string} text Text to display
+ */
+function notice(text) {
+	noticeEl.textContent = text;
+	noticeEl.classList.remove('fade-out');
+	noticeEl.classList.add('fade-in');
+	noticeEl.style.opacity = 1;
+	clearTimeout(noticeTimeout);
+	setTimeout(() => {
+		noticeEl.classList.add('fade-out');
+		noticeEl.classList.remove('fade-in');
+		noticeEl.style.opacity = 0;
+	}, 5000);
+}
+
 // Add event listeners
 for (let [i, option] of options.entries()) {
 	option.addEventListener('click', () => {
@@ -220,13 +250,13 @@ btnHome.addEventListener('click', () => {
 
 let socket;
 let host;
+let connected = false;
 
 function sendJSON(data) {
 	socket.send(JSON.stringify(data));
 }
 
 function close() {
-	alert('Socket closed.');
 	socket = null;
 	reset();
 }
@@ -242,12 +272,12 @@ function game(code) {
 	if (socket) {
 		socket.removeEventListener('close', close);
 		socket.close();
+		connected = false;
 	}
 	socket = new WebSocket(
-		window.location.href.replace(
-			/^https?/,
-			window.location.protocol == 'http:' ? 'ws' : 'wss',
-		),
+		`${window.location.protocol == 'http:' ? 'ws' : 'wss'}://${
+			window.location.host
+		}${window.location.pathname}`,
 	);
 
 	socket.addEventListener('open', () => {
@@ -275,7 +305,19 @@ function game(code) {
 				break;
 			case 'connect':
 				inputCode.value = json.code;
-				alert('Connected!');
+				window.location.hash = json.code;
+				codeEl.textContent = `Game code: ${json.code}`;
+				connected = true;
+
+				if (host) {
+					joinMessage.style.display = '';
+					formJoin.setAttribute('disabled', true);
+					btnPlay.setAttribute('disabled', true);
+					inputCode.setAttribute('readonly', true);
+					Object.values(DIFFICULTIES).forEach(({el}) => {
+						el.setAttribute('disabled', true);
+					});
+				}
 				break;
 			case 'state':
 				start();
@@ -293,26 +335,33 @@ function game(code) {
 				lives = json.lives;
 				if (host) {
 					if (json.correct) {
-						alert('Correct!');
+						notice('Correct!');
 					} else {
 						guessed[json.index] = true;
+						notice('Incorrect!');
 					}
 				} else {
-					alert(
-						`Host guessed ${rgbToHex(json.color)}. ${
-							json.correct ? 'Correct!' : 'Incorrect.'
-						}`,
-					);
+					if (json.correct) {
+						notice('Host guessed correctly!');
+					} else {
+						notice(
+							`Host incorrectly guessed ${rgbToHex(json.color)}!`,
+						);
+					}
 				}
 				update();
 				break;
 			case 'gameover':
 				started = false;
-				alert('Game Over!');
+				notice('Game Over!');
 				if (host) sendJSON({type: 'start'});
 				break;
 			case 'join':
 				if (host && !started) sendJSON({type: 'start'});
+				else notice('Someone joined the game!');
+				break;
+			case 'leave':
+				notice('Someone left the game.');
 				break;
 		}
 	});
@@ -320,6 +369,7 @@ function game(code) {
 
 formJoin.addEventListener('submit', e => {
 	e.preventDefault();
+	if (connected) return;
 	let code = inputCode.value;
 	game(code);
 
@@ -335,3 +385,11 @@ btnPlay.addEventListener('click', () => {
 });
 
 setDifficulty(window.localStorage.getItem('gtc-multiplayer-mode') || 'medium');
+
+if (window.location.hash.match(/^#[0-9A-F]{6}$/)) {
+	inputCode.value = window.location.hash.slice(1);
+	game(window.location.hash.slice(1));
+
+	answerEl.style.display = '';
+	optionsParent.style.display = 'none';
+}

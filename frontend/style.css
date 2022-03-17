@@ -45,7 +45,8 @@ body,
 #header *,
 #difficulties *,
 #join h2,
-#gameinfo * {
+#gameinfo *,
+#join-message {
 	text-align: center;
 }
 
@@ -59,12 +60,16 @@ body,
 	margin: 10px 0px;
 }
 
+#join-message {
+	margin-top: 20px;
+}
+
 .multiplayer #btn-play {
 	margin-left: 25px;
 }
 
 h1 {
-	font-size: 5em;
+	font-size: 4em;
 }
 
 h2 {
@@ -150,6 +155,11 @@ a:focus {
 	color: #ff0000;
 }
 
+#notice {
+	margin-top: 20px;
+	text-align: center;
+}
+
 input {
 	border: 1px solid #cccccc;
 	outline: none;
@@ -163,6 +173,22 @@ input {
 	-moz-osx-font-smoothing: inherit;
 	-webkit-appearance: none;
 	text-align: left;
+}
+
+input[type='text']:-moz-read-only {
+	background-color: #dddddd;
+	-webkit-user-select: all;
+	-moz-user-select: all;
+	-ms-user-select: all;
+	user-select: all;
+}
+
+input[type='text']:read-only {
+	background-color: #dddddd;
+	-webkit-user-select: all;
+	-moz-user-select: all;
+	-ms-user-select: all;
+	user-select: all;
 }
 
 .button {
@@ -181,6 +207,12 @@ input {
 	transition: background-color 0.25s ease-in-out;
 }
 
+[disabled] .button,
+.button:disabled {
+	background-color: #555555 !important;
+	cursor: not-allowed;
+}
+
 .button:hover {
 	background-color: #dddddd;
 }
@@ -197,6 +229,14 @@ input {
 .shake {
 	-webkit-animation: shake 1s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 	animation: shake 1s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.fade-in {
+	transition: opacity 0.1s ease-in-out;
+}
+
+.fade-out {
+	transition: opacity 3s ease-in-out;
 }
 
 @-webkit-keyframes shake {
@@ -258,5 +298,10 @@ input {
 
 	.button:not(.button-green):hover {
 		background-color: #777777;
+	}
+
+	[disabled] .button,
+	.button:disabled {
+		background-color: #222222 !important;
 	}
 }

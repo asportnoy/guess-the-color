@@ -42,10 +42,13 @@
 				<div id="join">
 					<h2>Join a game</h2>
 					<form id="joinform">
-						<input type="text" id="code" placeholder="Game code" tabindex="-1">
+						<input type="text" id="code" placeholder="Game code" tabindex="-1" maxlength="6">
 						<input type="submit" class="button button-green" value="Join!"></input>
 					</form>
 				</div>
+				<div id="join-message" style="display: none;">Share the code above with some friends! The game will
+					start once someone
+					joins.</div>
 			</div>
 		</div>
 	</div>
@@ -54,6 +57,7 @@
 		<div class="page-flex">
 			<div id="gameinfo" class="group">
 				<h1>Guess the color!</h1>
+				<h2 id="display-code"></h2>
 				<h2 id="difficulty"></h2>
 			</div>
 			<div class="group">
@@ -64,6 +68,7 @@
 				<div id="answer"></div>
 				<div id="options"></div>
 			</div>
+			<h2 id="notice" style="opacity: 0;">&nbsp;</h2>
 		</div>
 	</div>
 
