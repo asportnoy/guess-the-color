@@ -264,9 +264,15 @@ function close() {
 /**
  * Start game
  * @param {string | null} code The code to join, or null if you are not the host
+ * @param {boolean} [fromQueryString=false] Whether the game was started from the query string
  */
-function game(code) {
+function game(code, fromQueryString = false) {
 	host = code === null;
+	if (!host) {
+		if (code.startsWith('#')) code = code.slice(1);
+		if (!code.trim()) return alert('You must enter a code to join a game');
+		if (!code.match(/^[0-9A-f]{6}$/)) return alert('Invalid game code');
+	}
 	let started = false;
 
 	if (socket) {
@@ -302,6 +308,12 @@ function game(code) {
 		switch (json.type) {
 			case 'error':
 				alert(json.message);
+				break;
+			case 'notfound':
+				if (fromQueryString) {
+					window.history.replaceState({}, '', '.');
+					inputCode.value = '';
+				} else alert('Game not found');
 				break;
 			case 'connect':
 				inputCode.value = json.code;
@@ -367,11 +379,18 @@ function game(code) {
 	});
 }
 
+inputCode.addEventListener('input', e => {
+	if (!e.target.value.match(/^#?[0-9A-f]{0,6}$/))
+		e.target.value = inputCode.oldValue || '';
+	e.target.value = e.target.value.toUpperCase();
+	inputCode.oldValue = e.target.value;
+});
+
 formJoin.addEventListener('submit', e => {
 	e.preventDefault();
 	if (connected) return;
 	let code = inputCode.value;
-	game(code);
+	game(code.trim());
 
 	answerEl.style.display = '';
 	optionsParent.style.display = 'none';
@@ -388,7 +407,7 @@ setDifficulty(window.localStorage.getItem('gtc-multiplayer-mode') || 'easy');
 
 if (window.location.search.match(/^\?[0-9A-f]{6}$/)) {
 	inputCode.value = window.location.search.slice(1);
-	game(window.location.search.slice(1).toUpperCase());
+	game(window.location.search.slice(1).toUpperCase(), true);
 
 	answerEl.style.display = '';
 	optionsParent.style.display = 'none';
