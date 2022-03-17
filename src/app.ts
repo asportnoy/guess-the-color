@@ -28,7 +28,7 @@ let games = new Map<
 
 /**
  * Generate game code that's not in use
- * @returns 6 digit number (as string)
+ * @returns A game code
  */
 function generateGameCode(): string {
 	let code = rgbToHex(chooseRandomRgb()).slice(1);
@@ -235,7 +235,7 @@ router.ws('/multiplayer', socket => {
 							type: 'error',
 							message: 'No game code specified.',
 						});
-					join(data.roomCode);
+					join(data.roomCode.toUpperCase());
 					break;
 				case 'start':
 					if (!host || !room)
