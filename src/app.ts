@@ -114,6 +114,7 @@ router.ws('/multiplayer', socket => {
 					score: game.score,
 				});
 				game = undefined;
+				games.get(room)!.game = undefined;
 			}
 		}
 
