@@ -180,8 +180,7 @@ router.ws('/multiplayer', socket => {
 				});
 			if (!games.has(roomCode))
 				return sendJSON({
-					type: 'error',
-					message: 'Game not found.',
+					type: 'notfound',
 				});
 			room = roomCode;
 
