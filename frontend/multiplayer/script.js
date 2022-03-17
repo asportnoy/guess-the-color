@@ -305,7 +305,7 @@ function game(code) {
 				break;
 			case 'connect':
 				inputCode.value = json.code;
-				window.location.hash = json.code;
+				window.location.search = json.code;
 				codeEl.textContent = `Game code: ${json.code}`;
 				connected = true;
 
@@ -386,9 +386,9 @@ btnPlay.addEventListener('click', () => {
 
 setDifficulty(window.localStorage.getItem('gtc-multiplayer-mode') || 'easy');
 
-if (window.location.hash.match(/^#[0-9A-f]{6}$/)) {
-	inputCode.value = window.location.hash.slice(1);
-	game(window.location.hash.slice(1).toUpperCase());
+if (window.location.search.match(/^\?[0-9A-f]{6}$/)) {
+	inputCode.value = window.location.search.slice(1);
+	game(window.location.search.slice(1).toUpperCase());
 
 	answerEl.style.display = '';
 	optionsParent.style.display = 'none';
