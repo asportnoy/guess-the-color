@@ -1,21 +1,22 @@
 import express from 'express';
-import {WebSocketServer, WebSocket} from 'ws';
-import http from 'http';
+import expressWs from 'express-ws';
+import * as ws from 'ws';
 import {v4 as uuidv4} from 'uuid';
 import {Difficulty, Game, isDifficulty} from './game';
 const app = express();
-const server = http.createServer(app);
-server.listen(process.env.PORT || 8000);
+const wsServer = expressWs(app);
+app.listen(process.env.PORT || 8000);
+const BASE_PATH = process.env.BASE_PATH || '/';
+const router = express.Router();
+app.use(BASE_PATH, router);
 
-app.use(express.static('frontend'));
-
-const wsServer = new WebSocketServer({server});
+router.use(express.static('frontend'));
 
 let games = new Map<
 	string,
 	{
 		game: Game | undefined;
-		players: Set<{uuid: string; socket: WebSocket; host: boolean}>;
+		players: Set<{uuid: string; socket: ws; host: boolean}>;
 	}
 >();
 
@@ -31,7 +32,7 @@ function generateGameCode(): string {
 	return code.toString();
 }
 
-wsServer.on('connection', socket => {
+router.ws('/multiplayer', socket => {
 	try {
 		let uuid = uuidv4();
 		let room: string | undefined;

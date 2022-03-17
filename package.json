@@ -18,6 +18,7 @@
 	"homepage": "https://github.com/asportnoy/guess-the-color#readme",
 	"devDependencies": {
 		"@types/express": "^4.17.13",
+		"@types/express-ws": "^3.0.1",
 		"@types/uuid": "^8.3.4",
 		"@types/ws": "^8.5.3",
 		"typescript": "^4.6.2",
@@ -25,6 +26,6 @@
 	},
 	"dependencies": {
 		"express": "^4.17.3",
-		"ws": "^8.5.0"
+		"express-ws": "^5.0.2"
 	}
 }
