@@ -2,7 +2,13 @@ import express from 'express';
 import expressWs from 'express-ws';
 import * as ws from 'ws';
 import {v4 as uuidv4} from 'uuid';
-import {Difficulty, Game, isDifficulty} from './game';
+import {
+	chooseRandomRgb,
+	Difficulty,
+	Game,
+	isDifficulty,
+	rgbToHex,
+} from './game';
 const app = express();
 const wsServer = expressWs(app);
 app.listen(process.env.PORT || 8000);
@@ -25,9 +31,7 @@ let games = new Map<
  * @returns 6 digit number (as string)
  */
 function generateGameCode(): string {
-	let code = Math.floor(Math.random() * 1000000)
-		.toString()
-		.padStart(6, '0');
+	let code = rgbToHex(chooseRandomRgb()).slice(1);
 	if (games.has(code)) return generateGameCode();
 	return code.toString();
 }
