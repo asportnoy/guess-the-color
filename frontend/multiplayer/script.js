@@ -386,9 +386,9 @@ btnPlay.addEventListener('click', () => {
 
 setDifficulty(window.localStorage.getItem('gtc-multiplayer-mode') || 'easy');
 
-if (window.location.hash.match(/^#[0-9A-F]{6}$/)) {
+if (window.location.hash.match(/^#[0-9A-f]{6}$/)) {
 	inputCode.value = window.location.hash.slice(1);
-	game(window.location.hash.slice(1));
+	game(window.location.hash.slice(1).toUpperCase());
 
 	answerEl.style.display = '';
 	optionsParent.style.display = 'none';
