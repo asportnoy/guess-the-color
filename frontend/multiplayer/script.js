@@ -59,7 +59,7 @@ function reset() {
 	inputCode.removeAttribute('readonly');
 	joinMessage.style.display = 'none';
 	Object.values(DIFFICULTIES).forEach(({el}) => {
-		el.setAttribute('disabled', false);
+		el.removeAttribute('disabled');
 	});
 }
 
