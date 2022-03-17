@@ -305,7 +305,7 @@ function game(code) {
 				break;
 			case 'connect':
 				inputCode.value = json.code;
-				window.location.search = json.code;
+				window.history.pushState({}, '', `?${json.code}`);
 				codeEl.textContent = `Game code: ${json.code}`;
 				connected = true;
 
