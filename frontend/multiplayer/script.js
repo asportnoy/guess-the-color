@@ -4,11 +4,12 @@ const answerEl = document.getElementById('answer');
 const optionsParent = document.getElementById('options');
 const btnEasy = document.getElementById('difficulty-easy');
 const btnMedium = document.getElementById('difficulty-medium');
-const btnHard = document.getElementById('difficulty-hard');
+const btnShare = document.getElementById('btn-share');
 const formJoin = document.getElementById('joinform');
 const inputCode = document.getElementById('code');
 const joinMessage = document.getElementById('join-message');
 const btnPlay = document.getElementById('btn-play');
+const btnHard = document.getElementById('difficulty-hard');
 const btnHome = document.getElementById('btn-home');
 const difficultyEl = document.getElementById('difficulty');
 const codeEl = document.getElementById('display-code');
@@ -418,3 +419,21 @@ if (window.location.search.slice(1).match(CODE_REGEX)) {
 	answerEl.style.display = '';
 	optionsParent.style.display = 'none';
 }
+
+let canShare =
+	navigator.share &&
+	navigator.canShare({
+		url: window.location.href,
+	});
+if (!canShare && !navigator.clipboard?.writeText)
+	btnShare.style.display = 'none';
+btnShare.addEventListener('click', () => {
+	if (canShare) {
+		navigator.share({
+			url: window.location.href,
+		});
+	} else {
+		navigator.clipboard.writeText(window.location.href);
+		alert('Copied link to clipbard.');
+	}
+});

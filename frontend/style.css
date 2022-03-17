@@ -68,6 +68,10 @@ body,
 	margin-left: 25px;
 }
 
+#btn-share {
+	margin-top: 10px;
+}
+
 h1 {
 	font-size: 4em;
 }
