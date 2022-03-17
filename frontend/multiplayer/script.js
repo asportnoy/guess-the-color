@@ -5,7 +5,7 @@ const optionsParent = document.getElementById('options');
 const btnEasy = document.getElementById('difficulty-easy');
 const btnMedium = document.getElementById('difficulty-medium');
 const btnHard = document.getElementById('difficulty-hard');
-const formJoin = document.getElementById('join');
+const formJoin = document.getElementById('joinform');
 const inputCode = document.getElementById('code');
 const joinMessage = document.getElementById('join-message');
 const btnPlay = document.getElementById('btn-play');
@@ -17,6 +17,7 @@ const scoreEl = document.getElementById('score');
 const highScoreEl = document.getElementById('highscore');
 const noticeEl = document.getElementById('notice');
 
+const CODE_REGEX = /^#?[0-9A-f]{6}$/;
 const MAX_HEARTS = 7;
 const NUM_OPTIONS = 6;
 const option_html = '<button class="option" tabindex="0"></button>';
@@ -269,9 +270,8 @@ function close() {
 function game(code, fromQueryString = false) {
 	host = code === null;
 	if (!host) {
+		if (!code || !code.match(CODE_REGEX)) return;
 		if (code.startsWith('#')) code = code.slice(1);
-		if (!code.trim()) return alert('You must enter a code to join a game');
-		if (!code.match(/^[0-9A-f]{6}$/)) return alert('Invalid game code');
 	}
 	let started = false;
 
@@ -384,6 +384,12 @@ inputCode.addEventListener('input', e => {
 		e.target.value = inputCode.oldValue || '';
 	e.target.value = e.target.value.toUpperCase();
 	inputCode.oldValue = e.target.value;
+
+	if (e.target.value.match(CODE_REGEX)) {
+		formJoin.removeAttribute('disabled');
+	} else {
+		formJoin.setAttribute('disabled', true);
+	}
 });
 
 formJoin.addEventListener('submit', e => {
@@ -405,7 +411,7 @@ btnPlay.addEventListener('click', () => {
 
 setDifficulty(window.localStorage.getItem('gtc-multiplayer-mode') || 'easy');
 
-if (window.location.search.match(/^\?[0-9A-f]{6}$/)) {
+if (window.location.search.slice(1).match(CODE_REGEX)) {
 	inputCode.value = window.location.search.slice(1);
 	game(window.location.search.slice(1).toUpperCase(), true);
 
