@@ -133,6 +133,8 @@ router.ws('/multiplayer', socket => {
 					games.get(room!)!.players.delete(socket);
 				}
 			});
+
+			let killGame = false;
 			// Alert other players that this player left if you are the host
 			if (host) {
 				sendToRoom({
@@ -140,10 +142,7 @@ router.ws('/multiplayer', socket => {
 					message: 'The host left the game.',
 				});
 
-				games.get(room)!.players.forEach(({socket}) => {
-					socket.close();
-				});
-				games.delete(room);
+				killGame = true;
 			}
 			// Alert host if you were the last guest
 			else if (games.get(room)!.players.size === 1) {
@@ -151,10 +150,19 @@ router.ws('/multiplayer', socket => {
 					type: 'error',
 					message: 'All guessers left the game.',
 				});
+
+				killGame = true;
 			} else {
 				sendToRoom({
 					type: 'leave',
 				});
+			}
+
+			if (killGame) {
+				games.get(room)!.players.forEach(({socket}) => {
+					socket.close();
+				});
+				games.delete(room);
 			}
 
 			socket.close();
