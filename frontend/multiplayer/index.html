@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Guess the color!</title>
+	<link rel="stylesheet" href="../style.css">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-P4EC51DWHB"></script>
+	<script>
+		if (window.location.host == 'albertp.dev') {
+			window.dataLayer = window.dataLayer || [];
+			function gtag() { dataLayer.push(arguments); }
+			gtag('js', new Date());
+
+			gtag('config', 'G-P4EC51DWHB');
+		}
+	</script>
+</head>
+
+<body>
+	<div id="home" class="page">
+		<div class="page-flex">
+			<div id="header">
+				<h1>Guess the color!</h1>
+				<h2>By <a href="https://albertp.dev" target="_blank">Albert Portnoy</a></h2>
+				<a href="https://github.com/asportnoy/guess-the-color" target="_blank" tabindex="-1">Source Code</a>
+			</div>
+			<div class="group">
+				<div id="difficulties">
+					<h2>Create a game</h2>
+					<button id="difficulty-easy" class="button" tabindex="-1">Easy</button>
+					<button id="difficulty-medium" class="button" tabindex="-1">Medium</button>
+					<button id="difficulty-hard" class="button" tabindex="-1">Hard</button>
+					<button id="btn-play" class="button button-green">Play!</button>
+				</div>
+				<div id="join">
+					<h2>Join a game</h2>
+					<form id="joinform">
+						<input type="text" id="code" placeholder="Game code" tabindex="-1">
+						<input type="submit" class="button button-green" value="Join!"></input>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="game" class="page" style="display: none;">
+		<div class="top"><button id="btn-home" class="button">Go Home</button></div>
+		<div class="page-flex">
+			<div id="gameinfo" class="group">
+				<h1>Guess the color!</h1>
+				<h2 id="difficulty"></h2>
+			</div>
+			<div class="group">
+				<div id="lives"></div>
+				<div id="score"></div>
+			</div>
+			<div class="group">
+				<div id="answer"></div>
+				<div id="options"></div>
+			</div>
+		</div>
+	</div>
+
+	<script src="script.js"></script>
+</body>
+
+</html>
