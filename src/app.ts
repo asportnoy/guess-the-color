@@ -148,7 +148,7 @@ router.ws('/multiplayer', socket => {
 			else if (games.get(room)!.players.size === 1) {
 				sendToRoom({
 					type: 'error',
-					message: 'All guessers left the game.',
+					message: 'All guests left the game.',
 				});
 
 				killGame = true;
