@@ -132,7 +132,13 @@ export class Game {
 		min: number = this.getMin(),
 		max: number = this.getMax(),
 	): void {
-		this.answer = chooseRandomRgb();
+		let previousAnswer = this.answer;
+		do {
+			this.answer = chooseRandomRgb();
+		} while (
+			previousAnswer &&
+			this.getDiff(this.answer, previousAnswer) < 25
+		);
 
 		this.colors = [this.answer];
 

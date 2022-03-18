@@ -227,9 +227,13 @@ function chooseColors(min = getMin(), max = getMax()) {
 				.map(x => parseInt(x))
 		: [255, 255, 255];
 
+	let previousAnswer = answer;
 	do {
 		answer = chooseRandomRgb();
-	} while (getDiff(answer, bgColor) < 10);
+	} while (
+		getDiff(answer, bgColor) < 10 ||
+		(previousAnswer && getDiff(answer, previousAnswer) < 25)
+	);
 
 	colors = [answer];
 
