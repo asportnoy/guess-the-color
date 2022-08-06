@@ -58,8 +58,8 @@ export class dE00 {
 	private RsubT: number;
 
 	constructor(x1: LAB, x2: LAB, weights?: Weights) {
-		var sqrt = Math.sqrt;
-		var pow = Math.pow;
+		const sqrt = Math.sqrt;
+		const pow = Math.pow;
 
 		this.x1 = x1;
 		this.x2 = x2;
@@ -83,18 +83,18 @@ export class dE00 {
 		this.CBar = (this.C1 + this.C2) / 2;
 
 		// A Prime 1
-		this.aPrime1 =
-			x1.A +
-			(x1.A / 2) *
-				(1 -
-					sqrt(pow(this.CBar, 7) / (pow(this.CBar, 7) + pow(25, 7))));
+		this.aPrime1
+			= x1.A
+			+ x1.A / 2
+				* (1
+					- sqrt(pow(this.CBar, 7) / (pow(this.CBar, 7) + pow(25, 7))));
 
 		// A Prime 2
-		this.aPrime2 =
-			x2.A +
-			(x2.A / 2) *
-				(1 -
-					sqrt(pow(this.CBar, 7) / (pow(this.CBar, 7) + pow(25, 7))));
+		this.aPrime2
+			= x2.A
+			+ x2.A / 2
+				* (1
+					- sqrt(pow(this.CBar, 7) / (pow(this.CBar, 7) + pow(25, 7))));
 
 		// C Prime 1
 		this.CPrime1 = sqrt(pow(this.aPrime1, 2) + pow(x1.B, 2));
@@ -109,10 +109,10 @@ export class dE00 {
 		this.deltaCPrime = this.CPrime2 - this.CPrime1;
 
 		// S sub L
-		this.SsubL =
-			1 +
-			(0.015 * pow(this.LBar - 50, 2)) /
-				sqrt(20 + pow(this.LBar - 50, 2));
+		this.SsubL
+			= 1
+			+ 0.015 * pow(this.LBar - 50, 2)
+				/ sqrt(20 + pow(this.LBar - 50, 2));
 
 		// S sub C
 		this.SsubC = 1 + 0.045 * this.CBarPrime;
@@ -148,9 +148,9 @@ export class dE00 {
 	 * Returns the deltaE value.
 	 */
 	getDeltaE(): number {
-		var sqrt = Math.sqrt;
-		var sin = Math.sin;
-		var pow = Math.pow;
+		const sqrt = Math.sqrt;
+		const sin = Math.sin;
+		const pow = Math.pow;
 
 		// h Prime 1
 		this.hPrime1 = this.gethPrime1();
@@ -162,10 +162,10 @@ export class dE00 {
 		this.deltahPrime = this.getDeltahPrime();
 
 		// Delta H Prime
-		this.deltaHPrime =
-			2 *
-			sqrt(this.CPrime1 * this.CPrime2) *
-			sin(this.degreesToRadians(this.deltahPrime) / 2);
+		this.deltaHPrime
+			= 2
+			* sqrt(this.CPrime1 * this.CPrime2)
+			* sin(this.degreesToRadians(this.deltahPrime) / 2);
 
 		// H Bar Prime
 		this.HBarPrime = this.getHBarPrime();
@@ -180,32 +180,32 @@ export class dE00 {
 		this.RsubT = this.getRsubT();
 
 		// Put it all together!
-		var lightness = this.deltaLPrime / (this.ksubL * this.SsubL);
-		var chroma = this.deltaCPrime / (this.ksubC * this.SsubC);
-		var hue = this.deltaHPrime / (this.ksubH * this.SsubH);
+		const lightness = this.deltaLPrime / (this.ksubL * this.SsubL);
+		const chroma = this.deltaCPrime / (this.ksubC * this.SsubC);
+		const hue = this.deltaHPrime / (this.ksubH * this.SsubH);
 
 		return sqrt(
-			pow(lightness, 2) +
-				pow(chroma, 2) +
-				pow(hue, 2) +
-				this.RsubT * chroma * hue,
+			pow(lightness, 2)
+				+ pow(chroma, 2)
+				+ pow(hue, 2)
+				+ this.RsubT * chroma * hue,
 		);
 	}
 	/**
 	 * Returns the RT variable calculation.
 	 */
 	getRsubT(): number {
-		var sin = Math.sin;
-		var sqrt = Math.sqrt;
-		var pow = Math.pow;
-		var exp = Math.exp;
+		const sin = Math.sin;
+		const sqrt = Math.sqrt;
+		const pow = Math.pow;
+		const exp = Math.exp;
 
 		return (
-			-2 *
-			sqrt(
+			-2
+			* sqrt(
 				pow(this.CBarPrime, 7) / (pow(this.CBarPrime, 7) + pow(25, 7)),
-			) *
-			sin(
+			)
+			* sin(
 				this.degreesToRadians(
 					60 * exp(-pow((this.HBarPrime - 275) / 25, 2)),
 				),
@@ -216,21 +216,21 @@ export class dE00 {
 	 * Returns the T variable calculation.
 	 */
 	getT(): number {
-		var cos = Math.cos;
+		const cos = Math.cos;
 
 		return (
-			1 -
-			0.17 * cos(this.degreesToRadians(this.HBarPrime - 30)) +
-			0.24 * cos(this.degreesToRadians(2 * this.HBarPrime)) +
-			0.32 * cos(this.degreesToRadians(3 * this.HBarPrime + 6)) -
-			0.2 * cos(this.degreesToRadians(4 * this.HBarPrime - 63))
+			1
+			- 0.17 * cos(this.degreesToRadians(this.HBarPrime - 30))
+			+ 0.24 * cos(this.degreesToRadians(2 * this.HBarPrime))
+			+ 0.32 * cos(this.degreesToRadians(3 * this.HBarPrime + 6))
+			- 0.2 * cos(this.degreesToRadians(4 * this.HBarPrime - 63))
 		);
 	}
 	/**
 	 * Returns the H Bar Prime variable calculation.
 	 */
 	getHBarPrime(): number {
-		var abs = Math.abs;
+		const abs = Math.abs;
 
 		if (abs(this.hPrime1 - this.hPrime2) > 180) {
 			return (this.hPrime1 + this.hPrime2 + 360) / 2;
@@ -242,7 +242,7 @@ export class dE00 {
 	 * Returns the Delta h Prime variable calculation.
 	 */
 	getDeltahPrime(): number {
-		var abs = Math.abs;
+		const abs = Math.abs;
 
 		// When either C′1 or C′2 is zero, then Δh′ is irrelevant and may be set to
 		// zero.
@@ -276,13 +276,11 @@ export class dE00 {
 	 * A helper function to calculate the h Prime 1 and h Prime 2 values.
 	 */
 	private _gethPrimeFn(x: number, y: number): number {
-		var hueAngle;
-
 		if (x === 0 && y === 0) {
 			return 0;
 		}
 
-		hueAngle = this.radiansToDegrees(Math.atan2(x, y));
+		const hueAngle = this.radiansToDegrees(Math.atan2(x, y));
 
 		if (hueAngle >= 0) {
 			return hueAngle;

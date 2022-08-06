@@ -1,3 +1,5 @@
+/* globals dE00 */
+
 const pageHome = document.getElementById('home');
 const pageGame = document.getElementById('game');
 const answerEl = document.getElementById('answer');
@@ -54,7 +56,7 @@ function reset() {
 	lives = MAX_HEARTS;
 	score = 0;
 	streak = 0;
-	window.localStorage.removeItem(`gtc-game`);
+	window.localStorage.removeItem('gtc-game');
 	chooseColors();
 
 	pageHome.style.display = '';
@@ -65,7 +67,7 @@ function reset() {
  * Save game to local storage
  */
 function saveGame() {
-	let json = {
+	const json = {
 		answer,
 		colors,
 		guessed,
@@ -74,14 +76,14 @@ function saveGame() {
 		streak,
 	};
 
-	window.localStorage.setItem(`gtc-game`, JSON.stringify(json));
+	window.localStorage.setItem('gtc-game', JSON.stringify(json));
 }
 
 /**
  * Load game from local storage
  */
 function loadGame() {
-	let state = window.localStorage.getItem(`gtc-game`);
+	let state = window.localStorage.getItem('gtc-game');
 	if (!state) return reset();
 	state = JSON.parse(state);
 
@@ -106,7 +108,7 @@ function setDifficulty(diff, initial) {
 	);
 	difficulty = diff;
 	window.localStorage.setItem('gtc-mode', diff);
-	Object.entries(DIFFICULTIES).forEach(([key, {el}]) => {
+	Object.entries(DIFFICULTIES).forEach(([key, { el }]) => {
 		el.classList[diff === key ? 'add' : 'remove']('button-green');
 	});
 	difficultyEl.textContent = `Difficulty: ${difficulty}`;
@@ -186,7 +188,7 @@ function rgbToLab([r, g, b]) {
 	y = y > 0.008856 ? Math.pow(y, 1 / 3) : 7.787 * y + 16 / 116;
 	z = z > 0.008856 ? Math.pow(z, 1 / 3) : 7.787 * z + 16 / 116;
 
-	return {L: 116 * y - 16, A: 500 * (x - y), B: 200 * (y - z)};
+	return { L: 116 * y - 16, A: 500 * (x - y), B: 200 * (y - z) };
 }
 
 /**
@@ -219,20 +221,20 @@ let difficulty;
  * @returns {[number, number, number][]} RGB colors
  */
 function chooseColors(min = getMin(), max = getMax()) {
-	let bgColor = document.body.style.backgroundColor
+	const bgColor = document.body.style.backgroundColor
 		? window
-				.getComputedStyle(document.body)
-				.backgroundColor.match(/rgba?\((\d+), (\d+), (\d+)(?:, \d+)?\)/)
-				.slice(1)
-				.map(x => parseInt(x))
+			.getComputedStyle(document.body)
+			.backgroundColor.match(/rgba?\((\d+), (\d+), (\d+)(?:, \d+)?\)/)
+			.slice(1)
+			.map(x => parseInt(x))
 		: [255, 255, 255];
 
-	let previousAnswer = answer;
+	const previousAnswer = answer;
 	do {
 		answer = chooseRandomRgb();
 	} while (
-		getDiff(answer, bgColor) < 10 ||
-		(previousAnswer && getDiff(answer, previousAnswer) < 25)
+		getDiff(answer, bgColor) < 10
+		|| previousAnswer && getDiff(answer, previousAnswer) < 25
 	);
 
 	colors = [answer];
@@ -240,17 +242,17 @@ function chooseColors(min = getMin(), max = getMax()) {
 	// Choose rest of colors
 	let i = 0;
 	while (colors.length < NUM_OPTIONS) {
-		let color = chooseRandomRgb();
-		let answerDiff = getDiff(color, answer);
-		let allDiffs = colors.map(c => getDiff(color, c));
+		const color = chooseRandomRgb();
+		const answerDiff = getDiff(color, answer);
+		const allDiffs = colors.map(c => getDiff(color, c));
 
-		let bgDiff = getDiff(color, bgColor);
+		const bgDiff = getDiff(color, bgColor);
 		// Check that color is not too similar to answer or other colors
 		if (
-			answerDiff > min &&
-			answerDiff < max &&
-			allDiffs.every(diff => diff > 10) &&
-			bgDiff > 10
+			answerDiff > min
+			&& answerDiff < max
+			&& allDiffs.every(diff => diff > 10)
+			&& bgDiff > 10
 		)
 			colors.push(color);
 		i++;
@@ -270,9 +272,9 @@ function chooseColors(min = getMin(), max = getMax()) {
  */
 function update() {
 	// Set element colors
-	for (let [i, option] of options.entries()) {
+	for (const [i, option] of options.entries()) {
 		option.style.backgroundColor = rgbToHex(colors[i]);
-		let {L} = rgbToLab(colors[i]);
+		const { L } = rgbToLab(colors[i]);
 		option.style.color = L > 50 ? 'black' : 'white';
 		if (guessed[i]) {
 			option.textContent = rgbToHex(colors[i]);
@@ -298,9 +300,8 @@ let stopShakeTimeout;
 /**
  * Handle clicks from guess elements
  * @param {number} index The index of the button
- * @param {HTMLElement} element The button that was clicked
  */
-function onClick(index, element) {
+function onClick(index) {
 	if (guessed[index]) return; // Button was disabled
 	focusIndex = index;
 	if (answer.every((x, i) => x === colors[index][i])) {
@@ -343,13 +344,13 @@ function onClick(index, element) {
 }
 
 // Add event listeners
-for (let [i, option] of options.entries()) {
+for (const [i, option] of options.entries()) {
 	option.addEventListener('click', () => onClick(i, option));
-	option.addEventListener('focus', () => (focusIndex = i));
+	option.addEventListener('focus', () => focusIndex = i);
 }
 
 // Keypress event listener
-let keys = ['1', '2', '3', '4', '5', '6'];
+const keys = ['1', '2', '3', '4', '5', '6'];
 let focusIndex;
 window.addEventListener('keydown', e => {
 	if (keys.includes(e.key)) {
@@ -358,7 +359,7 @@ window.addEventListener('keydown', e => {
 	}
 
 	if (e.key === 'ArrowRight') {
-		if (focusIndex == null) focusIndex = 0;
+		if (focusIndex === undefined) focusIndex = 0;
 		else {
 			do {
 				focusIndex++;
@@ -369,7 +370,7 @@ window.addEventListener('keydown', e => {
 	}
 
 	if (e.key === 'ArrowLeft') {
-		if (focusIndex == null) focusIndex = options.length - 1;
+		if (focusIndex === undefined) focusIndex = options.length - 1;
 		else {
 			do {
 				focusIndex--;
@@ -397,14 +398,14 @@ function heartHTML(count = MAX_HEARTS) {
 setDifficulty(window.localStorage.getItem('gtc-mode') || 'easy', true);
 
 // Start game on load if one is already saved
-if (window.localStorage.getItem(`gtc-game`)) start();
+if (window.localStorage.getItem('gtc-game')) start();
 
 // Play button
 btnPlay.addEventListener('click', start);
 
 // Home button
 btnHome.addEventListener('click', () => {
-	if (score || (lives && lives !== MAX_HEARTS)) {
+	if (score || lives && lives !== MAX_HEARTS) {
 		if (!confirm('Are you sure you want to reset?')) return;
 	}
 

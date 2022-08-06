@@ -1,16 +1,17 @@
-import express from 'express';
-import expressWs from 'express-ws';
+/* eslint-disable no-inner-declarations */
 import * as ws from 'ws';
-import {v4 as uuidv4} from 'uuid';
 import {
-	chooseRandomRgb,
 	Difficulty,
 	Game,
+	chooseRandomRgb,
 	isDifficulty,
 	rgbToHex,
 } from './game';
+import express from 'express';
+import expressWs from 'express-ws';
+import { v4 as uuidv4 } from 'uuid';
 const app = express();
-const wsServer = expressWs(app);
+expressWs(app);
 app.listen(process.env.PORT || 8000);
 const BASE_PATH = process.env.BASE_PATH || '/';
 const router = express.Router();
@@ -18,12 +19,12 @@ app.use(BASE_PATH, router);
 
 router.use(express.static('frontend'));
 
-let games = new Map<
-	string,
-	{
-		game: Game | undefined;
-		players: Set<{uuid: string; socket: ws; host: boolean}>;
-	}
+const games = new Map<
+string,
+{
+	game: Game | undefined;
+	players: Set<{ uuid: string; socket: ws; host: boolean }>;
+}
 >();
 
 /**
@@ -31,26 +32,28 @@ let games = new Map<
  * @returns A game code
  */
 function generateGameCode(): string {
-	let code = rgbToHex(chooseRandomRgb()).slice(1);
+	const code = rgbToHex(chooseRandomRgb()).slice(1);
 	if (games.has(code)) return generateGameCode();
 	return code.toString();
 }
 
 router.ws('/multiplayer', socket => {
 	try {
-		let uuid = uuidv4();
+		const uuid = uuidv4();
 		let room: string | undefined;
 		let host = false;
 		let game: Game | undefined;
 		let difficulty: Difficulty;
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function sendJSON(json: any, ws = socket) {
 			ws.send(JSON.stringify(json));
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function sendToRoom(json: any, includeMe = true) {
 			if (!room) return;
-			games.get(room)!.players.forEach(({socket, uuid: socketUuid}) => {
+			games.get(room)!.players.forEach(({ socket, uuid: socketUuid }) => {
 				if (includeMe || uuid !== socketUuid) sendJSON(json, socket);
 			});
 		}
@@ -73,7 +76,7 @@ router.ws('/multiplayer', socket => {
 			if (!room || !game) return;
 			games
 				.get(room)!
-				.players.forEach(({socket, host, uuid: socketUuid}) => {
+				.players.forEach(({ socket, host, uuid: socketUuid }) => {
 					if (onlyMe && uuid !== socketUuid) return;
 					if (!game) return;
 					sendJSON(
@@ -96,8 +99,8 @@ router.ws('/multiplayer', socket => {
 		 */
 		function guess(guess: number) {
 			if (!room || !game) return;
-			let correct = game.guess(guess);
-			if (correct == null)
+			const correct = game.guess(guess);
+			if (correct === null)
 				return sendJSON({
 					type: 'error',
 					message: 'Invalid guess.',
@@ -159,7 +162,7 @@ router.ws('/multiplayer', socket => {
 			}
 
 			if (killGame) {
-				games.get(room)!.players.forEach(({socket}) => {
+				games.get(room)!.players.forEach(({ socket }) => {
 					socket.close();
 				});
 				games.delete(room);
@@ -184,7 +187,7 @@ router.ws('/multiplayer', socket => {
 				});
 			room = roomCode;
 
-			games.get(roomCode)!.players.add({uuid, socket, host});
+			games.get(roomCode)!.players.add({ uuid, socket, host });
 
 			sendJSON({
 				type: 'connect',
@@ -211,16 +214,16 @@ router.ws('/multiplayer', socket => {
 					type: 'error',
 					message: 'You are already in a game.',
 				});
-			let roomCode = generateGameCode();
+			const roomCode = generateGameCode();
 			difficulty = diff;
 			host = true;
-			games.set(roomCode, {game: undefined, players: new Set()});
+			games.set(roomCode, { game: undefined, players: new Set() });
 			join(roomCode);
 		}
 
 		socket.on('message', message => {
-			let string = message.toString();
-			let data = JSON.parse(string);
+			const string = message.toString();
+			const data = JSON.parse(string);
 			if (!data.type || typeof data.type !== 'string') return;
 			switch (data.type) {
 				case 'create':

@@ -1,4 +1,4 @@
-import {dE00, LAB} from './deltae';
+import { LAB, dE00 } from './deltae';
 
 type RGB = [
 	/** Red */
@@ -58,7 +58,7 @@ export class Game {
 	colors: RGB[] = [];
 	guessed: boolean[] = [];
 	lives: number = MAX_HEARTS;
-	score: number = 0;
+	score = 0;
 	difficulty: Difficulty;
 
 	constructor(difficulty: Difficulty = 'medium') {
@@ -107,7 +107,7 @@ export class Game {
 		y = y > 0.008856 ? Math.pow(y, 1 / 3) : 7.787 * y + 16 / 116;
 		z = z > 0.008856 ? Math.pow(z, 1 / 3) : 7.787 * z + 16 / 116;
 
-		return {L: 116 * y - 16, A: 500 * (x - y), B: 200 * (y - z)};
+		return { L: 116 * y - 16, A: 500 * (x - y), B: 200 * (y - z) };
 	}
 
 	/**
@@ -132,12 +132,12 @@ export class Game {
 		min: number = this.getMin(),
 		max: number = this.getMax(),
 	): void {
-		let previousAnswer = this.answer;
+		const previousAnswer = this.answer;
 		do {
 			this.answer = chooseRandomRgb();
 		} while (
-			previousAnswer &&
-			this.getDiff(this.answer, previousAnswer) < 25
+			previousAnswer
+			&& this.getDiff(this.answer, previousAnswer) < 25
 		);
 
 		this.colors = [this.answer];
@@ -145,15 +145,15 @@ export class Game {
 		// Choose rest of colors
 		let i = 0;
 		while (this.colors.length < NUM_OPTIONS) {
-			let color = chooseRandomRgb();
-			let answerDiff = this.getDiff(color, this.answer);
-			let allDiffs = this.colors.map(c => this.getDiff(color, c));
+			const color = chooseRandomRgb();
+			const answerDiff = this.getDiff(color, this.answer);
+			const allDiffs = this.colors.map(c => this.getDiff(color, c));
 
 			// Check that color is not too similar to answer or other colors
 			if (
-				answerDiff > min &&
-				answerDiff < max &&
-				allDiffs.every(diff => diff > 10)
+				answerDiff > min
+				&& answerDiff < max
+				&& allDiffs.every(diff => diff > 10)
 			)
 				this.colors.push(color);
 			i++;

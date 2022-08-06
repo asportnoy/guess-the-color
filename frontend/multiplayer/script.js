@@ -15,7 +15,6 @@ const difficultyEl = document.getElementById('difficulty');
 const codeEl = document.getElementById('display-code');
 const livesEl = document.getElementById('lives');
 const scoreEl = document.getElementById('score');
-const highScoreEl = document.getElementById('highscore');
 const noticeEl = document.getElementById('notice');
 
 const CODE_REGEX = /^#?[0-9A-f]{6}$/;
@@ -60,7 +59,7 @@ function reset() {
 	formJoin.removeAttribute('disabled');
 	inputCode.removeAttribute('readonly');
 	joinMessage.style.display = 'none';
-	Object.values(DIFFICULTIES).forEach(({el}) => {
+	Object.values(DIFFICULTIES).forEach(({ el }) => {
 		el.removeAttribute('disabled');
 	});
 }
@@ -74,7 +73,7 @@ function setDifficulty(diff, updateSetting) {
 	difficulty = diff;
 	if (updateSetting)
 		window.localStorage.setItem('gtc-multiplayer-mode', diff);
-	Object.entries(DIFFICULTIES).forEach(([key, {el}]) => {
+	Object.entries(DIFFICULTIES).forEach(([key, { el }]) => {
 		el.classList[diff === key ? 'add' : 'remove']('button-green');
 	});
 	difficultyEl.textContent = `Difficulty: ${difficulty}`;
@@ -128,7 +127,7 @@ function rgbToLab([r, g, b]) {
 	y = y > 0.008856 ? Math.pow(y, 1 / 3) : 7.787 * y + 16 / 116;
 	z = z > 0.008856 ? Math.pow(z, 1 / 3) : 7.787 * z + 16 / 116;
 
-	return {L: 116 * y - 16, A: 500 * (x - y), B: 200 * (y - z)};
+	return { L: 116 * y - 16, A: 500 * (x - y), B: 200 * (y - z) };
 }
 
 let answer;
@@ -144,9 +143,9 @@ let difficulty;
 function update() {
 	// Set element colors
 	if (colors) {
-		for (let [i, option] of options.entries()) {
+		for (const [i, option] of options.entries()) {
 			option.style.backgroundColor = rgbToHex(colors[i]);
-			let {L} = rgbToLab(colors[i]);
+			const { L } = rgbToLab(colors[i]);
 			option.style.color = L > 50 ? 'black' : 'white';
 			if (guessed[i]) {
 				option.textContent = rgbToHex(colors[i]);
@@ -183,18 +182,18 @@ function notice(text) {
 }
 
 // Add event listeners
-for (let [i, option] of options.entries()) {
+for (const [i, option] of options.entries()) {
 	option.addEventListener('click', () => {
 		sendJSON({
 			type: 'guess',
 			index: i,
 		});
 	});
-	option.addEventListener('focus', () => (focusIndex = i));
+	option.addEventListener('focus', () => focusIndex = i);
 }
 
 // Keypress event listener
-let keys = ['1', '2', '3', '4', '5', '6'];
+const keys = ['1', '2', '3', '4', '5', '6'];
 let focusIndex;
 window.addEventListener('keydown', e => {
 	if (!host) return;
@@ -205,7 +204,7 @@ window.addEventListener('keydown', e => {
 	}
 
 	if (e.key === 'ArrowRight') {
-		if (focusIndex == null) focusIndex = 0;
+		if (focusIndex === undefined) focusIndex = 0;
 		else {
 			do {
 				focusIndex++;
@@ -216,7 +215,7 @@ window.addEventListener('keydown', e => {
 	}
 
 	if (e.key === 'ArrowLeft') {
-		if (focusIndex == null) focusIndex = options.length - 1;
+		if (focusIndex === undefined) focusIndex = options.length - 1;
 		else {
 			do {
 				focusIndex--;
@@ -243,7 +242,7 @@ function heartHTML(count = MAX_HEARTS) {
 
 // Home button
 btnHome.addEventListener('click', () => {
-	if (score || (lives && lives !== MAX_HEARTS)) {
+	if (score || lives && lives !== MAX_HEARTS) {
 		if (!confirm('Are you sure you want to reset?')) return;
 	}
 
@@ -282,7 +281,7 @@ function game(code, fromQueryString = false) {
 		connected = false;
 	}
 	socket = new WebSocket(
-		`${window.location.protocol == 'http:' ? 'ws' : 'wss'}://${
+		`${window.location.protocol === 'http:' ? 'ws' : 'wss'}://${
 			window.location.host
 		}${window.location.pathname}`,
 	);
@@ -304,7 +303,7 @@ function game(code, fromQueryString = false) {
 	socket.addEventListener('close', close);
 
 	socket.addEventListener('message', message => {
-		let json = JSON.parse(message.data);
+		const json = JSON.parse(message.data);
 
 		switch (json.type) {
 			case 'error':
@@ -327,7 +326,7 @@ function game(code, fromQueryString = false) {
 					formJoin.setAttribute('disabled', true);
 					btnPlay.setAttribute('disabled', true);
 					inputCode.setAttribute('readonly', true);
-					Object.values(DIFFICULTIES).forEach(({el}) => {
+					Object.values(DIFFICULTIES).forEach(({ el }) => {
 						el.setAttribute('disabled', true);
 					});
 				}
@@ -367,10 +366,10 @@ function game(code, fromQueryString = false) {
 			case 'gameover':
 				started = false;
 				notice('Game Over!');
-				if (host) sendJSON({type: 'start'});
+				if (host) sendJSON({ type: 'start' });
 				break;
 			case 'join':
-				if (host && !started) sendJSON({type: 'start'});
+				if (host && !started) sendJSON({ type: 'start' });
 				else notice('Someone joined the game!');
 				break;
 			case 'leave':
@@ -396,7 +395,7 @@ inputCode.addEventListener('input', e => {
 formJoin.addEventListener('submit', e => {
 	e.preventDefault();
 	if (connected) return;
-	let code = inputCode.value;
+	const code = inputCode.value;
 	game(code.trim());
 
 	answerEl.style.display = '';
@@ -420,9 +419,9 @@ if (window.location.search.slice(1).match(CODE_REGEX)) {
 	optionsParent.style.display = 'none';
 }
 
-let canShare =
-	navigator.share &&
-	navigator.canShare({
+const canShare
+	= navigator.share
+	&& navigator.canShare({
 		url: window.location.href,
 	});
 if (!canShare && !navigator.clipboard?.writeText)
