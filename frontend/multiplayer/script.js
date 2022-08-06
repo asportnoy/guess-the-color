@@ -432,7 +432,7 @@ btnShare.addEventListener('click', () => {
 			url: window.location.href,
 		});
 	} else {
-		navigator.clipboard.writeText(window.location.href);
-		alert('Copied link to clipbard.');
+		navigator.clipboard.writeText(window.location.href)
+			.then(() => alert('Copied link to clipbard.'));
 	}
 });
